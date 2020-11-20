@@ -3,9 +3,11 @@
  */
 public class ArrayStorage {
     Resume[] storage = new Resume[10000];
+    public static int size = 0;
 
     void clear() {
         int count = 0;
+        size = 0;
         for (Resume r : storage) {
             if (r != null) {
                 storage[count] = null;
@@ -27,7 +29,8 @@ public class ArrayStorage {
                 }
             }
             if (r == null) {
-                storage[count] = resume; // здесь нужно доработать, чтобы нельзя было сохранить не уникальное значение
+                storage[count] = resume;
+                size++;
                 break;
             }
             count++;
@@ -54,6 +57,7 @@ public class ArrayStorage {
                 break;
             } else if (r.uuid.equals(uuid)) {
                 storage[count] = null;
+                size--;
 
             }
             count++;
@@ -88,7 +92,7 @@ public class ArrayStorage {
     }
 
     int size() {
-        int count = 0;
+        /*int count = 0;
 
         for (Resume r : storage) {
             if (r != null) {
@@ -97,6 +101,7 @@ public class ArrayStorage {
                 break;
             }
         }
-        return count;
+        return count;*/
+        return size;
     }
 }
