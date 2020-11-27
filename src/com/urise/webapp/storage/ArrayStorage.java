@@ -12,18 +12,17 @@ public class ArrayStorage {
     private int size = 0;
 
     public void clear() {
-        if (size > 0) {
-            Arrays.fill(storage, 0, size - 1, null);
-            size = 0;
-        }
+        Arrays.fill(storage, 0, size, null);
+        size = 0;
     }
 
     public void update(Resume resume) {
-        if (getUuidNumber(resume.getUuid()) < 0) {
+        int index = getIndex(resume.getUuid());
+        if (index < 0) {
             System.out.println("\nРезюме с именем " + "\"" + resume.getUuid() + "\"" + " отсутствует в базе данных.");
             return;
         }
-        storage[getUuidNumber(resume.getUuid())].setUuid(resume.getUuid());
+        storage[index] = resume;
         System.out.println("\nРезюме обновлено.");
     }
 
@@ -32,33 +31,30 @@ public class ArrayStorage {
             System.out.println("\nНевозможно добавить резюме " + resume.getUuid() + ", так как база данных переполнена");
             return;
         }
-        if (size == 0) {
-            storage[0] = resume;
-            size++;
+        if (getIndex(resume.getUuid()) >= 0) {
+            System.out.println("\nРезюме с именем " + "\"" + resume.getUuid() + "\"" + " уже есть в базе данных! Для обновления резюме используйте команду update.");
         } else {
-            if (getUuidNumber(resume.getUuid()) >= 0) {
-                System.out.println("\nРезюме с именем " + "\"" + resume.getUuid() + "\"" + " уже есть в базе данных! Для обновления резюме используйте команду update.");
-            } else {
-                storage[size] = resume;
-                size++;
-            }
+            storage[size] = resume;
+            size++;
         }
     }
 
     public Resume get(String uuid) {
-        if (getUuidNumber(uuid) < 0) {
+        int index = getIndex(uuid);
+        if (index < 0) {
             System.out.println("\nРезюме с именем " + "\"" + uuid + "\"" + " отсутствует в базе данных.");
             return null;
         }
-        return storage[getUuidNumber(uuid)];
+        return storage[index];
     }
 
     public void delete(String uuid) {
-        if (getUuidNumber(uuid) < 0) {
+        int index = getIndex(uuid);
+        if (index < 0) {
             System.out.println("\nРезюме с именем " + "\"" + uuid + "\"" + " отсутствует в базе данных.");
             return;
         }
-        storage[getUuidNumber(uuid)] = storage[size - 1];
+        storage[index] = storage[size - 1];
         storage[size - 1] = null;
         size--;
     }
@@ -74,14 +70,19 @@ public class ArrayStorage {
         return size;
     }
 
-    public int getUuidNumber(String uuid) { // метод осуществляет перебор i < size и возвращает номер совпавшего резюме для последующих операций с ним, если возвращает -1, совпадений не найдено.
-        int number = -1;
+    /**
+     * метод осуществляет перебор i < size и возвращает индекс
+     * для последующих операций с ним, если возвращает -1, совпадений не найдено.
+     */
+
+    private int getIndex(String uuid) {
+        int index = -1;
         for (int i = 0; i < size; i++) {
             if (uuid.equals(storage[i].getUuid())) {
-                number = i;
+                index = i;
                 break;
             }
         }
-        return number;
+        return index;
     }
 }
