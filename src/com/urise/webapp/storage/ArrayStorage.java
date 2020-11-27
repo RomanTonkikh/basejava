@@ -27,12 +27,10 @@ public class ArrayStorage {
     }
 
     public void save(Resume resume) {
-        if (size >= storage.length) {
-            System.out.println("\nНевозможно добавить резюме " + resume.getUuid() + ", так как база данных переполнена");
-            return;
-        }
-        if (getIndex(resume.getUuid()) >= 0) {
+        if (getIndex(resume.getUuid()) != -1) {
             System.out.println("\nРезюме с именем " + "\"" + resume.getUuid() + "\"" + " уже есть в базе данных! Для обновления резюме используйте команду update.");
+        } else if (size == storage.length) {
+            System.out.println("\nНевозможно добавить резюме " + resume.getUuid() + ", так как база данных переполнена");
         } else {
             storage[size] = resume;
             size++;
