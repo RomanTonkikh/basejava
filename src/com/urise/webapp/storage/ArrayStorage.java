@@ -7,8 +7,9 @@ import java.util.Arrays;
 /**
  * Array based storage for Resumes
  */
-public class ArrayStorage {
-    private Resume[] storage = new Resume[10_000];
+public class ArrayStorage implements Storage {
+    private static final int STORAGE_LIMIT = 10_000;
+    private Resume[] storage = new Resume[STORAGE_LIMIT];
     private int size = 0;
 
     public void clear() {
@@ -29,7 +30,7 @@ public class ArrayStorage {
     public void save(Resume resume) {
         if (getIndex(resume.getUuid()) != -1) {
             System.out.println("\nРезюме с именем " + "\"" + resume.getUuid() + "\"" + " уже есть в базе данных! Для обновления резюме используйте команду update.");
-        } else if (size == storage.length) {
+        } else if (size == STORAGE_LIMIT) {
             System.out.println("\nНевозможно добавить резюме " + resume.getUuid() + ", так как база данных переполнена");
         } else {
             storage[size] = resume;
