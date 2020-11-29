@@ -10,7 +10,7 @@ import java.util.Arrays;
 public class ArrayStorage implements Storage {
     private static final int STORAGE_LIMIT = 10_000;
     private Resume[] storage = new Resume[STORAGE_LIMIT];
-    private int size = 0;
+    private int size = 1;
 
     public void clear() {
         Arrays.fill(storage, 0, size, null);
