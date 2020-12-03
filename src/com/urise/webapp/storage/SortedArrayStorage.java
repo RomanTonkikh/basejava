@@ -12,15 +12,13 @@ public class SortedArrayStorage extends AbstractArrayStorage {
         return Arrays.binarySearch(storage, 0, size, searchKey);
     }
 
-    protected void advancedSave(Resume r) {
-        int index = getIndex(r.getUuid());
+    protected void advancedSave(int index, Resume resume) {
         System.arraycopy(storage, -index - 1, storage, -index, size);
-        storage[-index - 1] = r;
+        storage[-index - 1] = resume;
     }
 
-    protected void advancedDelete(String uuid) {
-        int index = getIndex(uuid);
+    protected void advancedDelete(int index) {
         System.arraycopy(storage, index + 1, storage, index, size);
-        storage[size - 1] = null;
+
     }
 }

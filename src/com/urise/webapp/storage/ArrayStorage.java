@@ -18,13 +18,11 @@ public class ArrayStorage extends AbstractArrayStorage {
         return -1;
     }
 
-    protected void advancedSave(Resume r) {
-        storage[size] = r;
+    protected void advancedSave(int index, Resume resume) {
+        storage[size] = resume;
     }
 
-    protected void advancedDelete(String uuid) {
-        int index = getIndex(uuid);
+    protected void advancedDelete(int index) {
         storage[index] = storage[size - 1];
-        storage[size - 1] = null;
     }
 }
