@@ -19,7 +19,9 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     }
 
     protected void advancedDelete(int index) {
-        System.arraycopy(storage, index + 1, storage, index, size - index - 1);
-
+        int indexPosition = size - index - 1;
+        if (indexPosition > 0) {
+            System.arraycopy(storage, index + 1, storage, index, indexPosition);
+        }
     }
 }
