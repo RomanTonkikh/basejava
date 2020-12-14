@@ -21,7 +21,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    public Resume advancedGet(int index) {
+    public Resume advancedGet(int index, String uuid) {
         return storage[index];
     }
 

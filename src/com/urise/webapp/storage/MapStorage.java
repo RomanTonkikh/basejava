@@ -4,14 +4,16 @@ import com.urise.webapp.model.Resume;
 
 import java.util.*;
 
-public class ListStorage extends AbstractStorage {
+public class MapStorage extends AbstractStorage {
 
-    protected List<Resume> storage = new ArrayList<>();
+    protected SortedMap<String, Resume> storage = new TreeMap<>();
 
     @Override
     protected int getIndex(String uuid) {
-        for (int i = 0; i < storage.size(); i++) {
-            if (uuid.equals(storage.get(i).getUuid())) {
+        int i = 0;
+        for (Map.Entry<String, Resume> entry : storage.entrySet()) {
+            i++;
+            if (uuid.equals(entry.getKey())) {
                 return i;
             }
         }
@@ -20,23 +22,22 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     protected void advancedSave(int index, Resume resume) {
-        storage.add(resume);
-        Collections.sort(storage);
+        storage.put(resume.getUuid(), resume);
     }
 
     @Override
     public Resume advancedGet(int index, String uuid) {
-        return storage.get(index);
+        return storage.get(uuid);
     }
 
     @Override
     protected void advancedDelete(int index, String uuid) {
-        storage.remove(index);
+        storage.remove(uuid);
     }
 
     @Override
     protected void advancedUpdate(int index, Resume resume) {
-        storage.set(index, resume);
+        storage.put(resume.getUuid(), resume);
     }
 
     @Override
@@ -52,6 +53,6 @@ public class ListStorage extends AbstractStorage {
     @Override
     public Resume[] advancedGetAll() {
         Resume[] resume = new Resume[storage.size()];
-        return storage.toArray(resume);
+        return storage.values().toArray(resume);
     }
 }

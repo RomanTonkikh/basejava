@@ -24,12 +24,12 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
-    public Resume advancedGet(int index) {
+    public Resume advancedGet(int index, String uuid) {
         return storage[index];
     }
 
     @Override
-    protected void advancedDelete(int index) {
+    protected void advancedDelete(int index, String uuid) {
         int indexPosition = size - index - 1;
         if (indexPosition > 0) {
             System.arraycopy(storage, index + 1, storage, index, indexPosition);

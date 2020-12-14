@@ -27,12 +27,12 @@ public class ArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
-    public Resume advancedGet(int index) {
+    public Resume advancedGet(int index, String uuid) {
         return storage[index];
     }
 
     @Override
-    protected void advancedDelete(int index) {
+    protected void advancedDelete(int index,String uuid) {
         storage[index] = storage[size - 1];
         storage[size - 1] = null;
         size--;
