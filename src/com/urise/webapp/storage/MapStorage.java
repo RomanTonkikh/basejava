@@ -6,7 +6,7 @@ import java.util.*;
 
 public class MapStorage extends AbstractStorage {
 
-    protected SortedMap<String, Resume> storage = new TreeMap<>();
+    private final Map<String, Resume> storage = new TreeMap<>();
 
     @Override
     protected int getIndex(String uuid) {
@@ -21,37 +21,34 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    protected void advancedSave(int index, Resume resume) {
+    protected void advancedSave(int searchKey, Resume resume) {
         storage.put(resume.getUuid(), resume);
     }
 
     @Override
-    public Resume advancedGet(int index, String uuid) {
+    public Resume advancedGet(String uuid) {
         return storage.get(uuid);
     }
 
     @Override
-    protected void advancedDelete(int index, String uuid) {
+    protected void advancedDelete(String uuid) {
         storage.remove(uuid);
     }
 
     @Override
-    protected void advancedUpdate(int index, Resume resume) {
+    protected void advancedUpdate(int searchKey, Resume resume) {
         storage.put(resume.getUuid(), resume);
     }
 
-    @Override
-    protected void advancedClear() {
+    public void clear() {
         storage.clear();
     }
 
-    @Override
-    public int advancedSize() {
+    public int size() {
         return storage.size();
     }
 
-    @Override
-    public Resume[] advancedGetAll() {
+    public Resume[] getAll() {
         Resume[] resume = new Resume[storage.size()];
         return storage.values().toArray(resume);
     }

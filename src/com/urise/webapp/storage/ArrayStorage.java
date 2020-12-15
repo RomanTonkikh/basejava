@@ -1,10 +1,6 @@
 package com.urise.webapp.storage;
 
-import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
-
-import java.util.Arrays;
-
 
 public class ArrayStorage extends AbstractArrayStorage {
     @Override
@@ -18,24 +14,13 @@ public class ArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
-    protected void advancedSave(int index, Resume resume) {
-        if (size >= STORAGE_LIMIT) {
-            throw new StorageException("Storage overflow", resume.getUuid());
-        }
+    protected void saveElement(int index, Resume resume) {
         storage[size] = resume;
-        size++;
     }
 
     @Override
-    public Resume advancedGet(int index, String uuid) {
-        return storage[index];
-    }
-
-    @Override
-    protected void advancedDelete(int index,String uuid) {
+    protected void fillElement(int index) {
         storage[index] = storage[size - 1];
-        storage[size - 1] = null;
-        size--;
     }
 
     @Override
@@ -43,3 +28,4 @@ public class ArrayStorage extends AbstractArrayStorage {
         storage[index] = resume;
     }
 }
+

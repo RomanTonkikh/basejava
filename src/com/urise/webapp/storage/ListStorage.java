@@ -6,7 +6,7 @@ import java.util.*;
 
 public class ListStorage extends AbstractStorage {
 
-    protected List<Resume> storage = new ArrayList<>();
+    private final List<Resume> storage = new ArrayList<>();
 
     @Override
     protected int getIndex(String uuid) {
@@ -19,38 +19,35 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected void advancedSave(int index, Resume resume) {
+    protected void advancedSave(int searchKey, Resume resume) {
         storage.add(resume);
         Collections.sort(storage);
     }
 
     @Override
-    public Resume advancedGet(int index, String uuid) {
-        return storage.get(index);
+    public Resume advancedGet(String uuid) {
+        return storage.get(getIndex(uuid));
     }
 
     @Override
-    protected void advancedDelete(int index, String uuid) {
-        storage.remove(index);
+    protected void advancedDelete(String uuid) {
+        storage.remove(getIndex(uuid));
     }
 
     @Override
-    protected void advancedUpdate(int index, Resume resume) {
-        storage.set(index, resume);
+    protected void advancedUpdate(int searchKey, Resume resume) {
+        storage.set(searchKey, resume);
     }
 
-    @Override
-    protected void advancedClear() {
+    public void clear() {
         storage.clear();
     }
 
-    @Override
-    public int advancedSize() {
+    public int size() {
         return storage.size();
     }
 
-    @Override
-    public Resume[] advancedGetAll() {
+    public Resume[] getAll() {
         Resume[] resume = new Resume[storage.size()];
         return storage.toArray(resume);
     }

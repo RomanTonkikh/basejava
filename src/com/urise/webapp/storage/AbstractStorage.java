@@ -7,28 +7,24 @@ import com.urise.webapp.model.Resume;
 
 import java.util.Arrays;
 
-
 public abstract class AbstractStorage implements Storage {
-    public void clear() {
-        advancedClear();
-    }
 
     @Override
     public void update(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (index < 0) {
+        int searchKey = getIndex(resume.getUuid());
+        if (searchKey < 0) {
             throw new NotExistStorageException(resume.getUuid());
         }
-        advancedUpdate(index, resume);
+        advancedUpdate(searchKey, resume);
     }
 
     @Override
     public void save(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (index >= 0) {
+        int searchKey = getIndex(resume.getUuid());
+        if (searchKey >= 0) {
             throw new ExistStorageException(resume.getUuid());
         }
-        advancedSave(index, resume);
+        advancedSave(searchKey, resume);
     }
 
     @Override
@@ -37,7 +33,7 @@ public abstract class AbstractStorage implements Storage {
         if (index < 0) {
             throw new NotExistStorageException(uuid);
         }
-        return advancedGet(index, uuid);
+        return advancedGet(uuid);
     }
 
     @Override
@@ -46,34 +42,17 @@ public abstract class AbstractStorage implements Storage {
         if (index < 0) {
             throw new NotExistStorageException(uuid);
         }
-        advancedDelete(index, uuid);
-    }
-
-    @Override
-    public Resume[] getAll() {
-        return advancedGetAll();
-    }
-
-    @Override
-    public int size() {
-        return advancedSize();
+        advancedDelete(uuid);
     }
 
     protected abstract int getIndex(String uuid);
 
-    protected abstract void advancedSave(int index, Resume resume);
+    protected abstract void advancedSave(int searchKey, Resume resume);
 
-    protected abstract Resume advancedGet(int index, String uuid);
+    protected abstract Resume advancedGet(String uuid);
 
-    protected abstract void advancedDelete(int index, String uuid);
+    protected abstract void advancedDelete(String uuid);
 
-    protected abstract void advancedUpdate(int index, Resume resume);
-
-    protected abstract void advancedClear();
-
-    protected abstract int advancedSize();
-
-    protected abstract Resume[] advancedGetAll();
-
+    protected abstract void advancedUpdate(int searchKey, Resume resume);
 
 }
