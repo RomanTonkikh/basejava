@@ -9,12 +9,10 @@ public class MapStorage extends AbstractStorage {
     private final Map<String, Resume> storage = new TreeMap<>();
 
     @Override
-    protected int getIndex(String uuid) {
-        int i = 0;
+    protected int getSearchKey(String uuid) {
         for (Map.Entry<String, Resume> entry : storage.entrySet()) {
-            i++;
             if (uuid.equals(entry.getKey())) {
-                return i;
+                return 0;
             }
         }
         return -1;

@@ -12,17 +12,6 @@ import static com.urise.webapp.storage.AbstractArrayStorage.STORAGE_LIMIT;
 public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
     private final Storage storage;
 
-    private static final String UUID_1 = "uuid_1";
-    private static final Resume RESUME_1 = new Resume(UUID_1);
-
-    private static final String UUID_2 = "uuid_2";
-    private static final Resume RESUME_2 = new Resume(UUID_2);
-
-    private static final String UUID_3 = "uuid_3";
-    private static final Resume RESUME_3 = new Resume(UUID_3);
-
-    private static final String UUID_4 = "uuid_4";
-
     protected AbstractArrayStorageTest(Storage storage) {
         super(storage);
         this.storage = storage;
