@@ -10,6 +10,32 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size = 0;
 
+    @Override
+    protected void advancedUpdate(Object index, Resume resume) {
+        storage[(int) index] = resume;
+    }
+
+    @Override
+    protected void advancedSave(Object index, Resume resume) {
+        if (size >= STORAGE_LIMIT) {
+            throw new StorageException("Storage overflow", resume.getUuid());
+        }
+        saveElement((int) index, resume);
+        size++;
+    }
+
+    @Override
+    protected void advancedDelete(Object index) {
+        fillElement((int) index);
+        storage[size - 1] = null;
+        size--;
+    }
+
+    @Override
+    public Resume advancedGet(Object index) {
+        return storage[(int) index];
+    }
+
     public void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
@@ -19,38 +45,17 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         return Arrays.copyOfRange(storage, 0, size);
     }
 
-    @Override
-    public Resume advancedGet(String uuid) {
-        return storage[getSearchKey(uuid)];
-    }
-
     public int size() {
         return size;
     }
 
     @Override
-    protected void advancedSave(int searchKey, Resume resume) {
-        if (size >= STORAGE_LIMIT) {
-            throw new StorageException("Storage overflow", resume.getUuid());
-        }
-        saveElement(searchKey, resume);
-        size++;
+    protected boolean checkExist(Object index) {
+        return (int) index >= 0;
     }
 
-    @Override
-    protected void advancedDelete(String uuid) {
-        fillElement(getSearchKey(uuid));
-        storage[size - 1] = null;
-        size--;
-    }
+    protected abstract void saveElement(int index, Resume resume);
 
-    @Override
-    protected void advancedUpdate(int searchKey, Resume resume) {
-        storage[searchKey] = resume;
-    }
-
-    protected abstract void saveElement(int searchKey, Resume resume);
-
-    protected abstract void fillElement(int searchKey);
+    protected abstract void fillElement(int index);
 
 }

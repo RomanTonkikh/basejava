@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
 public abstract class AbstractStorageTest {
-    private final Storage storage;
+    protected final Storage storage;
 
     protected static final String UUID_1 = "uuid_1";
     protected static final Resume RESUME_1 = new Resume(UUID_1);

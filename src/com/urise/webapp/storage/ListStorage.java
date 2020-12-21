@@ -9,34 +9,39 @@ public class ListStorage extends AbstractStorage {
     private final List<Resume> storage = new ArrayList<>();
 
     @Override
-    protected int getSearchKey(String uuid) {
+    protected Object getSearchKey(String uuid) {
         for (int i = 0; i < storage.size(); i++) {
-            if (uuid.equals(storage.get(i).getUuid())) {
+            if (storage.get(i).getUuid().equals(uuid)) {
                 return i;
             }
         }
-        return -1;
+        return null;
     }
 
     @Override
-    protected void advancedSave(int searchKey, Resume resume) {
+    protected boolean checkExist(Object index) {
+        return index != null;
+    }
+
+    @Override
+    protected void advancedSave(Object index, Resume resume) {
         storage.add(resume);
         Collections.sort(storage);
     }
 
     @Override
-    public Resume advancedGet(String uuid) {
-        return storage.get(getSearchKey(uuid));
+    public Resume advancedGet(Object index) {
+        return storage.get((int) index);
     }
 
     @Override
-    protected void advancedDelete(String uuid) {
-        storage.remove(getSearchKey(uuid));
+    protected void advancedDelete(Object index) {
+        storage.remove((int) index);
     }
 
     @Override
-    protected void advancedUpdate(int searchKey, Resume resume) {
-        storage.set(searchKey, resume);
+    protected void advancedUpdate(Object index, Resume resume) {
+        storage.set((int) index, resume);
     }
 
     public void clear() {
