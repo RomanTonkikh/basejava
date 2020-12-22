@@ -19,14 +19,13 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean checkExist(Object index) {
+    protected boolean isExist(Object index) {
         return index != null;
     }
 
     @Override
     protected void advancedSave(Object index, Resume resume) {
         storage.add(resume);
-        Collections.sort(storage);
     }
 
     @Override

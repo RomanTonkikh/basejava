@@ -10,16 +10,14 @@ public class MapStorage extends AbstractStorage {
 
     @Override
     protected Object getSearchKey(String uuid) {
-        for (Map.Entry<String, Resume> entry : storage.entrySet()) {
-            if (uuid.equals(entry.getKey())) {
-                return uuid;
-            }
+        if (storage.containsKey(uuid)) {
+            return uuid;
         }
         return null;
     }
 
     @Override
-    protected boolean checkExist(Object searchKey) {
+    protected boolean isExist(Object searchKey) {
         return searchKey != null;
     }
 
