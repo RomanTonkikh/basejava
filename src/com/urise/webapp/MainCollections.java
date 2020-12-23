@@ -23,7 +23,7 @@ public class MainCollections {
     private static final Resume RESUME_4 = new Resume(UUID_4);
 
     static void printAll() {
-        for (Resume resume : LIST_STORAGE.getAll()) {
+        for (Resume resume : LIST_STORAGE.getAllSorted()) {
             System.out.println(resume);
         }
     }
