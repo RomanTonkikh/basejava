@@ -22,6 +22,6 @@ public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
                 Assert.fail("Overflowing happened ahead of time");
             }
         }
-        storage.save(new Resume(UUID_4, FULL_NAME_4));
+        storage.save(new Resume(UUID_4, "Steve Jobs"));
     }
 }

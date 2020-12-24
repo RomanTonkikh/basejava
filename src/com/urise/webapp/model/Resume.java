@@ -11,8 +11,7 @@ public class Resume {
     private final String fullName;
 
     public Resume(String fullName) {
-        this.uuid = UUID.randomUUID().toString();
-        this.fullName = fullName;
+        this(UUID.randomUUID().toString(), fullName);
     }
 
     public Resume(String uuid, String fullName) {
@@ -45,6 +44,6 @@ public class Resume {
 
     @Override
     public String toString() {
-        return String.format("%s / %s",fullName, uuid);
+        return String.format("%s / %s", fullName, uuid);
     }
 }

@@ -25,7 +25,7 @@ public class MapResumeStorage extends AbstractStorage {
 
     @Override
     public Resume advancedGet(Object searchKey) {
-        return storage.get(((Resume) searchKey).getUuid());
+        return (Resume) searchKey;
     }
 
     @Override
@@ -46,9 +46,7 @@ public class MapResumeStorage extends AbstractStorage {
         return storage.size();
     }
 
-    public List<Resume> getAllSorted() {
-        List<Resume> list = new ArrayList<>(storage.values());
-        list.sort(RESUME_COMPARATOR);
-        return list;
-    }
+    public List<Resume> getListResume() {
+        return new ArrayList<>(storage.values());
+     }
 }

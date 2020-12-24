@@ -51,8 +51,7 @@ public class ListStorage extends AbstractStorage {
         return storage.size();
     }
 
-    public List<Resume> getAllSorted() {
-        storage.sort(RESUME_COMPARATOR);
+    public List<Resume> getListResume() {
         return storage;
     }
 }
