@@ -4,12 +4,12 @@ import com.urise.webapp.model.Resume;
 
 import java.util.*;
 
-public class ListStorage extends AbstractStorage {
+public class ListStorage extends AbstractStorage<Integer> {
 
     private final List<Resume> storage = new ArrayList<>();
 
     @Override
-    protected Object getSearchKey(String uuid) {
+    protected Integer getSearchKey(String uuid) {
         for (int i = 0; i < storage.size(); i++) {
             if (storage.get(i).getUuid().equals(uuid)) {
                 return i;
@@ -19,28 +19,28 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean isExist(Object index) {
+    protected boolean isExist(Integer index) {
         return index != null;
     }
 
     @Override
-    protected void advancedSave(Object index, Resume resume) {
+    protected void advancedSave(Integer index, Resume resume) {
         storage.add(resume);
     }
 
     @Override
-    public Resume advancedGet(Object index) {
-        return storage.get((int) index);
+    public Resume advancedGet(Integer index) {
+        return storage.get(index);
     }
 
     @Override
-    protected void advancedDelete(Object index) {
-        storage.remove((int) index);
+    protected void advancedDelete(Integer index) {
+        storage.remove(index.intValue());
     }
 
     @Override
-    protected void advancedUpdate(Object index, Resume resume) {
-        storage.set((int) index, resume);
+    protected void advancedUpdate(Integer index, Resume resume) {
+        storage.set(index, resume);
     }
 
     public void clear() {
