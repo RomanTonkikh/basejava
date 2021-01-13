@@ -1,60 +1,35 @@
 package com.urise.webapp.model;
 
-import java.time.LocalDate;
-import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
-public class Company extends Section {
-    private final String nameCompany;
-    private final String url;
-    private final LocalDate startDate;
-    private final LocalDate endDate;
-    private final String title;
-    private final String description;
+public class Company extends AbstractSection {
+    private final List<Position> listPosition;
 
+    public Company(List<Position> listPosition) {
+        Objects.requireNonNull(listPosition, "listCompany must not be null");
+        this.listPosition = listPosition;
+    }
 
-    public Company(String nameCompany, String url, LocalDate startDate, LocalDate endDate, String title, String description) {
-        Objects.requireNonNull(title, "title must not be null");
-        Objects.requireNonNull(startDate, "startDate must not be null");
-        Objects.requireNonNull(endDate, "endDate must not be null");
-        this.nameCompany = nameCompany;
-        this.url = url;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.title = title;
-        this.description = description;
+    public List<Position> getContent() {
+        return listPosition;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
-        Company company = (Company) o;
-
-        if (!nameCompany.equals(company.nameCompany)) return false;
-        if (!url.equals(company.url)) return false;
-        if (!startDate.equals(company.startDate)) return false;
-        if (!endDate.equals(company.endDate)) return false;
-        if (!title.equals(company.title)) return false;
-        return description.equals(company.description);
+        Company that = (Company) o;
+        return listPosition.equals(that.listPosition);
     }
 
     @Override
     public int hashCode() {
-        int result = nameCompany.hashCode();
-        result = 31 * result + url.hashCode();
-        result = 31 * result + startDate.hashCode();
-        result = 31 * result + endDate.hashCode();
-        result = 31 * result + title.hashCode();
-        result = 31 * result + description.hashCode();
-        return result;
+        return Objects.hash(listPosition);
     }
 
     @Override
     public String toString() {
-        return nameCompany + " (" + url + ")" + "\n" +
-                startDate + " - " + endDate + "  " + title + "\n" +
-                description;
+        return listPosition.toString();
     }
 }

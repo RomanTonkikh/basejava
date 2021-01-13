@@ -2,16 +2,16 @@ package com.urise.webapp.model;
 
 import java.util.Objects;
 
-public class TextSection extends Section {
-    private final String textField;
+public class TextSection extends AbstractSection {
+    private final String content;
 
-    public TextSection(String textField) {
-        Objects.requireNonNull(textField, "textField must not be null");
-        this.textField = textField;
+    public TextSection(String content) {
+        Objects.requireNonNull(content, "content must not be null");
+        this.content = content;
     }
 
-    public String getTextField() {
-        return textField;
+    public String getContent() {
+        return content;
     }
 
     @Override
@@ -19,16 +19,16 @@ public class TextSection extends Section {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TextSection that = (TextSection) o;
-        return textField.equals(that.textField);
+        return content.equals(that.content);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(textField);
+        return Objects.hash(content);
     }
 
     @Override
     public String toString() {
-        return textField;
+        return content;
     }
 }

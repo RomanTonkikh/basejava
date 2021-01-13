@@ -7,7 +7,7 @@ public class Resume {
     private final String uuid;
     private final String fullName;
     private final Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
-    private final Map<SectionType, Section> sections = new EnumMap<>(SectionType.class);
+    private final Map<SectionType, AbstractSection> sections = new EnumMap<>(SectionType.class);
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -32,7 +32,7 @@ public class Resume {
         return contacts.get(type);
     }
 
-    public Section getSection(SectionType type) {
+    public AbstractSection getSection(SectionType type) {
         return sections.get(type);
     }
 
@@ -40,7 +40,7 @@ public class Resume {
         return this.contacts;
     }
 
-    public Map<SectionType, Section> getSections() {
+    public Map<SectionType, AbstractSection> getSections() {
         return this.sections;
     }
 
@@ -48,22 +48,30 @@ public class Resume {
         this.contacts.put(type, contacts);
     }
 
-    public void setSection(SectionType type, Section section) {
-        this.sections.put(type, section);
+    public void setSection(SectionType type, AbstractSection abstractSection) {
+        this.sections.put(type, abstractSection);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         Resume resume = (Resume) o;
-        return uuid.equals(resume.uuid) &&
-                fullName.equals(resume.fullName);
+
+        if (!uuid.equals(resume.uuid)) return false;
+        if (!fullName.equals(resume.fullName)) return false;
+        if (!contacts.equals(resume.contacts)) return false;
+        return sections.equals(resume.sections);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, fullName);
+        int result = uuid.hashCode();
+        result = 31 * result + fullName.hashCode();
+        result = 31 * result + contacts.hashCode();
+        result = 31 * result + sections.hashCode();
+        return result;
     }
 
     @Override
