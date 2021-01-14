@@ -25,7 +25,7 @@ public class ListSection extends AbstractSection {
 
     @Override
     public int hashCode() {
-        return Objects.hash(textList);
+        return textList.hashCode();
     }
 
     @Override
