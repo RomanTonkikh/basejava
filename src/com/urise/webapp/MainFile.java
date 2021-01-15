@@ -1,12 +1,27 @@
 package com.urise.webapp;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
+import java.util.Objects;
 
 public class MainFile {
-    public static void main(String[] args) {
-        String filePath = ".\\.gitignore";
+
+    public static void printFiles(File file) throws IOException {
+        if (file.isDirectory()) {
+            File[] list = file.listFiles();
+            for (int i = 0; i < Objects.requireNonNull(list).length; i++) {
+                printFiles(list[i]);
+            }
+        } else {
+            System.out.println(file.getCanonicalPath());
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+
+        File pathFile = new File("..\\basejava");
+        printFiles(pathFile);
+
+        /*String filePath = ".\\.gitignore";
         File file = new File(filePath);
         try {
             System.out.println(file.getCanonicalPath());
@@ -26,6 +41,6 @@ public class MainFile {
         } catch (IOException e) {
             throw new RuntimeException(e);
 
-        }
+        }*/
     }
 }

@@ -11,7 +11,7 @@ public class Company extends AbstractSection {
         this.listPosition = listPosition;
     }
 
-    public List<Position> getContent() {
+    public List<Position> getListPosition() {
         return listPosition;
     }
 

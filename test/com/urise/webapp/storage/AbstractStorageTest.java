@@ -8,9 +8,9 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
+import static com.urise.webapp.ResumeTestData.fillResume;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
@@ -18,16 +18,16 @@ public abstract class AbstractStorageTest {
     protected final Storage storage;
 
     protected static final String UUID_1 = "uuid_1";
-    protected static final Resume RESUME_1 = new Resume(UUID_1, "Elon Musk");
+    protected static final Resume RESUME_1 = fillResume(UUID_1, "Elon Musk");
 
     protected static final String UUID_2 = "uuid_2";
-    protected static final Resume RESUME_2 = new Resume(UUID_2, "Mark Zuckerberg");
+    protected static final Resume RESUME_2 = fillResume(UUID_2, "Mark Zuckerberg");
 
     protected static final String UUID_3 = "uuid_3";
-    protected static final Resume RESUME_3 = new Resume(UUID_3, "Bill Gates");
+    protected static final Resume RESUME_3 = fillResume(UUID_3, "Bill Gates");
 
     protected static final String UUID_4 = "uuid_4";
-    protected static final Resume RESUME_4 = new Resume(UUID_4, "Steve Jobs");
+    protected static final Resume RESUME_4 = fillResume(UUID_4, "Steve Jobs");
 
     protected AbstractStorageTest(Storage storage) {
         this.storage = storage;

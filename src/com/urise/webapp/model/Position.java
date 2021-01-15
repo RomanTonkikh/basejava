@@ -1,25 +1,24 @@
 package com.urise.webapp.model;
 
 import java.time.LocalDate;
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Position extends AbstractSection {
     private final Link homePage;
-    private final LocalDate startDate;
-    private final LocalDate endDate;
-    private final String title;
-    private final String description;
-
+    private final List<Period> periods = new ArrayList<>();
 
     public Position(String name, String url, LocalDate startDate, LocalDate endDate, String title, String description) {
-        Objects.requireNonNull(title, "title must not be null");
-        Objects.requireNonNull(startDate, "startDate must not be null");
-        Objects.requireNonNull(endDate, "endDate must not be null");
-        this.homePage = new Link(name,url);
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.title = title;
-        this.description = description;
+        this.homePage = new Link(name, url);
+        this.periods.add(new Period(startDate, endDate, title, description));
+    }
+
+    public Link getHomePage() {
+        return homePage;
+    }
+
+    public List<Period> getPeriods() {
+        return periods;
     }
 
     @Override
@@ -30,26 +29,18 @@ public class Position extends AbstractSection {
         Position position = (Position) o;
 
         if (!homePage.equals(position.homePage)) return false;
-        if (!startDate.equals(position.startDate)) return false;
-        if (!endDate.equals(position.endDate)) return false;
-        if (!title.equals(position.title)) return false;
-        return description != null ? description.equals(position.description) : position.description == null;
+        return periods.equals(position.periods);
     }
 
     @Override
     public int hashCode() {
         int result = homePage.hashCode();
-        result = 31 * result + startDate.hashCode();
-        result = 31 * result + endDate.hashCode();
-        result = 31 * result + title.hashCode();
-        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + periods.hashCode();
         return result;
     }
 
     @Override
     public String toString() {
-        return homePage + "\n" +
-                startDate + " - " + endDate + "  " + title + "\n" +
-                description;
+        return homePage + "" + periods;
     }
 }
