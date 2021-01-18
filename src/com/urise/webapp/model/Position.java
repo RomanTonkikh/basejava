@@ -1,24 +1,38 @@
 package com.urise.webapp.model;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 
-public class Position extends AbstractSection {
-    private final Link homePage;
-    private final List<Period> periods = new ArrayList<>();
+public class Position {
+    private final LocalDate startDate;
+    private final LocalDate endDate;
+    private final String title;
+    private final String description;
 
-    public Position(String name, String url, LocalDate startDate, LocalDate endDate, String title, String description) {
-        this.homePage = new Link(name, url);
-        this.periods.add(new Period(startDate, endDate, title, description));
+    public Position(LocalDate startDate, LocalDate endDate, String title, String description) {
+        Objects.requireNonNull(title, "title must not be null");
+        Objects.requireNonNull(startDate, "startDate must not be null");
+        Objects.requireNonNull(endDate, "endDate must not be null");
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.title = title;
+        this.description = description;
     }
 
-    public Link getHomePage() {
-        return homePage;
+    public LocalDate getStartDate() {
+        return startDate;
     }
 
-    public List<Period> getPeriods() {
-        return periods;
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     @Override
@@ -28,19 +42,23 @@ public class Position extends AbstractSection {
 
         Position position = (Position) o;
 
-        if (!homePage.equals(position.homePage)) return false;
-        return periods.equals(position.periods);
+        if (!startDate.equals(position.startDate)) return false;
+        if (!endDate.equals(position.endDate)) return false;
+        if (!title.equals(position.title)) return false;
+        return description.equals(position.description);
     }
 
     @Override
     public int hashCode() {
-        int result = homePage.hashCode();
-        result = 31 * result + periods.hashCode();
+        int result = startDate.hashCode();
+        result = 31 * result + endDate.hashCode();
+        result = 31 * result + title.hashCode();
+        result = 31 * result + description.hashCode();
         return result;
     }
 
     @Override
     public String toString() {
-        return homePage + "" + periods;
+        return startDate + " - " + endDate + "     " +  title + "\n" + description;
     }
 }

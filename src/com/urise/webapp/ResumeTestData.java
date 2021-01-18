@@ -43,11 +43,11 @@ public class ResumeTestData {
         List<String> listRomanQualifications = Arrays.asList("Java syntax", "Java core");
         ListSection listQualifications = new ListSection(listRomanQualifications);
 
-        Position position1 = new Position("JavaRush", "https://javarush.ru", LocalDate.of(2020, 8, 1), LocalDate.of(2020, 11, 10), "Ученик", "Изучал Java syntax, core, дошел до 22 уровня");
-        Position position2 = new Position("Java Online Projects", "https://javaops.ru/", LocalDate.of(2020, 11, 11), LocalDate.now(), "Ученик", "Изучаю Java на примере создания web приложения");
-        position1.getPeriods().add(new Period(LocalDate.of(2021, 1, 1), LocalDate.now(), "Ученик", "Продолжаю решать задачи"));
-        Company companyExperience = new Company(Arrays.asList(position1, position2));
-        Company companyEducation = new Company(Arrays.asList(position1, position2));
+        Organization organization1 = new Organization("JavaRush", "https://javarush.ru", LocalDate.of(2020, 8, 1), LocalDate.of(2020, 11, 10), "Ученик", "Изучал Java syntax, core, дошел до 22 уровня");
+        Organization organization2 = new Organization("Java Online Projects", "https://javaops.ru/", LocalDate.of(2020, 11, 11), LocalDate.now(), "Ученик", "Изучаю Java на примере создания web приложения");
+        organization1.getPeriods().add(new Position(LocalDate.of(2021, 1, 1), LocalDate.now(), "Ученик", "Продолжаю решать задачи"));
+        CompanySection companyExperience = new CompanySection(Arrays.asList(organization1, organization2));
+        CompanySection companyEducation = new CompanySection(Arrays.asList(organization1, organization2));
 
         resume.setSection(SectionType.OBJECTIVE, sectionObjective);
         resume.setSection(SectionType.PERSONAL, sectionPersonal);

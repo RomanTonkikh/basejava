@@ -12,7 +12,7 @@ public class MainFile {
                 printFiles(list[i]);
             }
         } else {
-            System.out.println(file.getCanonicalPath());
+            System.out.println(file.getName());
         }
     }
 
