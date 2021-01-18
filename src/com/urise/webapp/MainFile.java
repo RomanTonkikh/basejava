@@ -1,24 +1,28 @@
 package com.urise.webapp;
 
 import java.io.*;
-import java.util.Objects;
 
 public class MainFile {
 
-    public static void printFiles(File file) throws IOException {
-        if (file.isDirectory()) {
-            File[] list = file.listFiles();
-            for (int i = 0; i < Objects.requireNonNull(list).length; i++) {
-                printFiles(list[i]);
+    public static void printFiles(File dir) throws IOException {
+        File[] files = dir.listFiles();
+
+        if (files != null) {
+
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    System.out.println("Direcory: " + file.getName());
+                    printFiles(file);
+                } else if (file.isFile()) {
+                    System.out.println("\t" + "File: " + file.getName());
+                }
             }
-        } else {
-            System.out.println(file.getName());
         }
     }
 
     public static void main(String[] args) throws Exception {
 
-        File pathFile = new File("..\\basejava");
+        File pathFile = new File(".\\src\\com\\urise\\webapp");
         printFiles(pathFile);
 
         /*String filePath = ".\\.gitignore";

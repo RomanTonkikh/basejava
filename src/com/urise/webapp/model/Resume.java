@@ -44,11 +44,11 @@ public class Resume {
         return this.sections;
     }
 
-    public void setContact(ContactType type, String contacts) {
+    public void addContact(ContactType type, String contacts) {
         this.contacts.put(type, contacts);
     }
 
-    public void setSection(SectionType type, AbstractSection abstractSection) {
+    public void addSection(SectionType type, AbstractSection abstractSection) {
         this.sections.put(type, abstractSection);
     }
 

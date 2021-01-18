@@ -24,17 +24,17 @@ public class MapUuidStorage extends AbstractStorage<String> {
     }
 
     @Override
-    public Resume advancedGet(String searchKey) {
+    public Resume doGet(String searchKey) {
         return storage.get(searchKey);
     }
 
     @Override
-    protected void advancedDelete(String searchKey) {
+    protected void doDelete(String searchKey) {
         storage.remove(searchKey);
     }
 
     @Override
-    protected void advancedUpdate(String searchKey, Resume resume) {
+    protected void doUpdate(String searchKey, Resume resume) {
         storage.put(searchKey, resume);
     }
 
@@ -46,7 +46,7 @@ public class MapUuidStorage extends AbstractStorage<String> {
         return storage.size();
     }
 
-    public List<Resume> getListResume() {
+    public List<Resume> doCopyAll() {
         return new ArrayList<>(storage.values());
     }
 }

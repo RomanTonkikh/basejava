@@ -22,7 +22,7 @@ public class Link {
 
     @Override
     public String toString() {
-        return "Link(" + name + ", " + url + ")" + "\n";
+        return name + ", " + url + "\n";
     }
 
     @Override
