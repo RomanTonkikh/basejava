@@ -24,7 +24,7 @@ public class ListStorage extends AbstractStorage<Integer> {
     }
 
     @Override
-    protected void advancedSave(Integer index, Resume resume) {
+    protected void doSave(Integer index, Resume resume) {
         storage.add(resume);
     }
 
