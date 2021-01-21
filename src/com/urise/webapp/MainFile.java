@@ -11,10 +11,10 @@ public class MainFile {
 
             for (File file : files) {
                 if (file.isDirectory()) {
-                    System.out.println("Direcory: " + file.getName());
+                    System.out.println("\n" + file.getAbsolutePath() + "\\" + "\n" );
                     printFiles(file);
                 } else if (file.isFile()) {
-                    System.out.println("\t" + "File: " + file.getName());
+                    System.out.println("\t" + file.getName());
                 }
             }
         }
