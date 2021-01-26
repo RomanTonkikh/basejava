@@ -1,10 +1,10 @@
-package com.urise.webapp.storage;
+package com.urise.webapp.storage.serializer;
 
 import com.urise.webapp.model.Resume;
 
 import java.io.*;
 
-public interface IOStorage {
+public interface Serializer {
 
     Resume doRead(InputStream is) throws IOException;
 
