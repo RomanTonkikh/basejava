@@ -5,6 +5,7 @@ import com.urise.webapp.model.*;
 import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -16,11 +17,16 @@ public class DataStreamSerializer implements Serializer {
             dos.writeUTF(resume.getUuid());
             dos.writeUTF(resume.getFullName());
             Map<ContactType, String> contacts = resume.getContacts();
-            dos.writeInt(contacts.size());
+            /*dos.writeInt(contacts.size());
             for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
                 dos.writeUTF(entry.getKey().name());
                 dos.writeUTF(entry.getValue());
-            }
+            }*/
+            nextgenWriter(dos, contacts.entrySet(), entry -> {
+                dos.writeUTF(entry.getKey().name());
+                dos.writeUTF(entry.getValue());
+            });
+
             Map<SectionType, AbstractSection> sections = resume.getSections();
             for (Map.Entry<SectionType, AbstractSection> entry : sections.entrySet()) {
                 dos.writeUTF(entry.getKey().name());
@@ -109,6 +115,18 @@ public class DataStreamSerializer implements Serializer {
                 }
             }
             return resume;
+        }
+    }
+
+    interface Writer<X> {
+        void write(X x) throws IOException;
+    }
+
+    private <X> void nextgenWriter(DataOutputStream dos, Collection<X> collection, Writer<X> writer) throws IOException {
+        dos.writeInt(collection.size());
+        for (X item : collection) {
+            writer.write(item);
+
         }
     }
 }
