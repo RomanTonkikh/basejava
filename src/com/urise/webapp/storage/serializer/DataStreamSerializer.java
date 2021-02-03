@@ -5,7 +5,6 @@ import com.urise.webapp.model.*;
 import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -17,16 +16,15 @@ public class DataStreamSerializer implements Serializer {
             dos.writeUTF(resume.getUuid());
             dos.writeUTF(resume.getFullName());
             Map<ContactType, String> contacts = resume.getContacts();
-            /*dos.writeInt(contacts.size());
+            dos.writeInt(contacts.size());
             for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
                 dos.writeUTF(entry.getKey().name());
                 dos.writeUTF(entry.getValue());
-            }*/
-            nextgenWriter(dos, contacts.entrySet(), entry -> {
+            }
+           /* nextgenWriter(dos, contacts.entrySet(), entry -> {
                 dos.writeUTF(entry.getKey().name());
                 dos.writeUTF(entry.getValue());
-            });
-
+            });*/
             Map<SectionType, AbstractSection> sections = resume.getSections();
             for (Map.Entry<SectionType, AbstractSection> entry : sections.entrySet()) {
                 dos.writeUTF(entry.getKey().name());
@@ -50,7 +48,7 @@ public class DataStreamSerializer implements Serializer {
                         dos.writeInt(listOrganization.size());
                         for (Organization organization : listOrganization) {
                             dos.writeUTF(organization.getHomePage().getName());
-                            dos.writeUTF(organization.getHomePage().getUrl());
+                            dos.writeUTF(organization.getHomePage().getUrl() == null ? "" : organization.getHomePage().getUrl());
                             dos.writeInt(organization.getPositions().size());
                             for (Organization.Position position : organization.getPositions()) {
                                 dos.writeInt(position.getStartDate().getYear());
@@ -58,7 +56,7 @@ public class DataStreamSerializer implements Serializer {
                                 dos.writeInt(position.getEndDate().getYear());
                                 dos.writeInt(position.getEndDate().getMonth().getValue());
                                 dos.writeUTF(position.getTitle());
-                                dos.writeUTF(position.getDescription());
+                                dos.writeUTF(position.getDescription() == null ? "" : position.getDescription());
                             }
                         }
                         break;
@@ -99,12 +97,17 @@ public class DataStreamSerializer implements Serializer {
                     case EDUCATION:
                         int orgSize = dis.readInt();
                         for (int i = 0; i < orgSize; i++) {
-                            Link link = new Link(dis.readUTF(), dis.readUTF());
+                            String name = dis.readUTF();
+                            String url = dis.readUTF();
+                            Link link = new Link(name, url.equals("") ? null : url);
                             List<Organization.Position> listPos = new ArrayList<>();
                             int posSize = dis.readInt();
                             for (int j = 0; j < posSize; j++) {
-                                Organization.Position position = new Organization.Position(LocalDate.of(dis.readInt(),
-                                        dis.readInt(), 1), LocalDate.of(dis.readInt(), dis.readInt(), 1), dis.readUTF(), dis.readUTF());
+                                LocalDate StatDate = LocalDate.of(dis.readInt(), dis.readInt(), 1);
+                                LocalDate EndDate = LocalDate.of(dis.readInt(), dis.readInt(), 1);
+                                String title = dis.readUTF();
+                                String description = dis.readUTF();
+                                Organization.Position position = new Organization.Position(StatDate, EndDate, title, description.equals("") ? null : description);
                                 listPos.add(position);
                             }
                             resume.addSection(st, new OrganizationSection(new Organization(link, listPos)));
@@ -117,8 +120,7 @@ public class DataStreamSerializer implements Serializer {
             return resume;
         }
     }
-
-    interface Writer<X> {
+/*   interface Writer<X> {
         void write(X x) throws IOException;
     }
 
@@ -126,7 +128,6 @@ public class DataStreamSerializer implements Serializer {
         dos.writeInt(collection.size());
         for (X item : collection) {
             writer.write(item);
-
-        }
-    }
+}
+    }*/
 }
