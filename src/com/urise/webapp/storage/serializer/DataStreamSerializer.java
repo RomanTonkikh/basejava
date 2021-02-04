@@ -5,8 +5,8 @@ import com.urise.webapp.model.*;
 import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 public class DataStreamSerializer implements Serializer {
 
@@ -15,55 +15,44 @@ public class DataStreamSerializer implements Serializer {
         try (DataOutputStream dos = new DataOutputStream(os)) {
             dos.writeUTF(resume.getUuid());
             dos.writeUTF(resume.getFullName());
-            Map<ContactType, String> contacts = resume.getContacts();
-            dos.writeInt(contacts.size());
-            for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
+            nextgenWriter(dos, resume.getContacts().entrySet(), entry -> {
                 dos.writeUTF(entry.getKey().name());
                 dos.writeUTF(entry.getValue());
-            }
-           /* nextgenWriter(dos, contacts.entrySet(), entry -> {
-                dos.writeUTF(entry.getKey().name());
-                dos.writeUTF(entry.getValue());
-            });*/
-            Map<SectionType, AbstractSection> sections = resume.getSections();
-            for (Map.Entry<SectionType, AbstractSection> entry : sections.entrySet()) {
-                dos.writeUTF(entry.getKey().name());
+            });
+            nextgenWriter(dos, resume.getSections().entrySet(), entry -> {
+                SectionType st = entry.getKey();
                 AbstractSection section = entry.getValue();
-                switch (entry.getKey()) {
+                dos.writeUTF(st.name());
+                switch (st) {
                     case OBJECTIVE:
                     case PERSONAL:
                         dos.writeUTF(((TextSection) section).getContent());
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        List<String> textList = ((ListSection) section).getTextList();
-                        dos.writeInt(textList.size());
-                        for (String str : textList) {
-                            dos.writeUTF(str);
-                        }
+                        nextgenWriter(dos, ((ListSection) section).getTextList(), dos::writeUTF);
                         break;
                     case EXPERIENCE:
                     case EDUCATION:
-                        List<Organization> listOrganization = ((OrganizationSection) section).getListOrganization();
-                        dos.writeInt(listOrganization.size());
-                        for (Organization organization : listOrganization) {
+                        nextgenWriter(dos, ((OrganizationSection) section).getListOrganization(), organization -> {
                             dos.writeUTF(organization.getHomePage().getName());
-                            dos.writeUTF(organization.getHomePage().getUrl() == null ? "" : organization.getHomePage().getUrl());
-                            dos.writeInt(organization.getPositions().size());
-                            for (Organization.Position position : organization.getPositions()) {
+                            dos.writeUTF(organization.getHomePage().getUrl() == null ? "" : organization.
+                                    getHomePage().getUrl());
+                            nextgenWriter(dos, organization.getPositions(), position -> {
                                 dos.writeInt(position.getStartDate().getYear());
                                 dos.writeInt(position.getStartDate().getMonth().getValue());
                                 dos.writeInt(position.getEndDate().getYear());
                                 dos.writeInt(position.getEndDate().getMonth().getValue());
                                 dos.writeUTF(position.getTitle());
                                 dos.writeUTF(position.getDescription() == null ? "" : position.getDescription());
-                            }
-                        }
+                            });
+                        });
                         break;
                     default:
                         break;
                 }
-            }
+            });
+
         }
     }
 
@@ -77,7 +66,8 @@ public class DataStreamSerializer implements Serializer {
             for (int i = 0; i < size; i++) {
                 resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
             }
-            while (dis.available() > 0) {
+            int sectionSize = dis.readInt();
+            for (int count = 0; count < sectionSize; count++) {
                 SectionType st = SectionType.valueOf(dis.readUTF());
                 switch (st) {
                     case OBJECTIVE:
@@ -107,7 +97,8 @@ public class DataStreamSerializer implements Serializer {
                                 LocalDate EndDate = LocalDate.of(dis.readInt(), dis.readInt(), 1);
                                 String title = dis.readUTF();
                                 String description = dis.readUTF();
-                                Organization.Position position = new Organization.Position(StatDate, EndDate, title, description.equals("") ? null : description);
+                                Organization.Position position = new Organization.Position(StatDate, EndDate, title,
+                                        description.equals("") ? null : description);
                                 listPos.add(position);
                             }
                             resume.addSection(st, new OrganizationSection(new Organization(link, listPos)));
@@ -120,14 +111,16 @@ public class DataStreamSerializer implements Serializer {
             return resume;
         }
     }
-/*   interface Writer<X> {
+
+    interface Writer<X> {
         void write(X x) throws IOException;
     }
 
-    private <X> void nextgenWriter(DataOutputStream dos, Collection<X> collection, Writer<X> writer) throws IOException {
+    private <X> void nextgenWriter(DataOutputStream dos,
+                                   Collection<X> collection, Writer<X> writer) throws IOException {
         dos.writeInt(collection.size());
         for (X item : collection) {
             writer.write(item);
-}
-    }*/
+        }
+    }
 }

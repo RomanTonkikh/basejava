@@ -52,7 +52,7 @@ public abstract class AbstractStorageTest {
     public void update() {
         Resume result = new Resume(UUID_3, "Bill Gates");
         storage.update(result);
-        assertTrue(result.equals(storage.get(UUID_3)));
+        assertEquals(result, storage.get(UUID_3));
     }
 
     @Test(expected = NotExistStorageException.class)
