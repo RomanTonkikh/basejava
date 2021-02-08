@@ -76,23 +76,18 @@ public class DataStreamSerializer implements Serializer {
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        int listSize = dis.readInt();
                         List<String> list = new ArrayList<>();
-                        for (int i = 0; i < listSize; i++) {
-                            list.add(dis.readUTF());
-                        }
+                        nextgenReader(dis, () -> list.add(dis.readUTF()));
                         resume.addSection(st, new ListSection(list));
                         break;
                     case EXPERIENCE:
                     case EDUCATION:
-                        int orgSize = dis.readInt();
-                        for (int i = 0; i < orgSize; i++) {
+                        nextgenReader(dis, () -> {
                             String name = dis.readUTF();
                             String url = dis.readUTF();
                             Link link = new Link(name, url.equals("") ? null : url);
                             List<Organization.Position> listPos = new ArrayList<>();
-                            int posSize = dis.readInt();
-                            for (int j = 0; j < posSize; j++) {
+                            nextgenReader(dis, () -> {
                                 LocalDate StatDate = dateReader(dis);
                                 LocalDate EndDate = dateReader(dis);
                                 String title = dis.readUTF();
@@ -100,9 +95,9 @@ public class DataStreamSerializer implements Serializer {
                                 Organization.Position position = new Organization.Position(StatDate, EndDate, title,
                                         description.equals("") ? null : description);
                                 listPos.add(position);
-                            }
+                            });
                             resume.addSection(st, new OrganizationSection(new Organization(link, listPos)));
-                        }
+                        });
                         break;
                     default:
                         break;
