@@ -35,14 +35,13 @@ public class DataStreamSerializer implements Serializer {
                     case EXPERIENCE:
                     case EDUCATION:
                         nextgenWriter(dos, ((OrganizationSection) section).getListOrganization(), organization -> {
-                            dos.writeUTF(organization.getHomePage().getName());
-                            dos.writeUTF(organization.getHomePage().getUrl() == null ? "" : organization.
-                                    getHomePage().getUrl());
+                            final Link homePage = organization.getHomePage();
+                            dos.writeUTF(homePage.getName());
+                            final String url = homePage.getUrl();
+                            dos.writeUTF(url == null ? "" : url);
                             nextgenWriter(dos, organization.getPositions(), position -> {
-                                dos.writeInt(position.getStartDate().getYear());
-                                dos.writeInt(position.getStartDate().getMonth().getValue());
-                                dos.writeInt(position.getEndDate().getYear());
-                                dos.writeInt(position.getEndDate().getMonth().getValue());
+                                dateWriter(dos, position.getStartDate());
+                                dateWriter(dos, position.getEndDate());
                                 dos.writeUTF(position.getTitle());
                                 dos.writeUTF(position.getDescription() == null ? "" : position.getDescription());
                             });
@@ -56,18 +55,19 @@ public class DataStreamSerializer implements Serializer {
         }
     }
 
+    private void dateWriter(DataOutputStream dos, LocalDate locDate) throws IOException {
+        dos.writeInt(locDate.getYear());
+        dos.writeInt(locDate.getMonth().getValue());
+    }
+
     @Override
     public Resume doRead(InputStream is) throws IOException {
         try (DataInputStream dis = new DataInputStream(is)) {
             String uuid = dis.readUTF();
             String fullName = dis.readUTF();
-            int size = dis.readInt();
             Resume resume = new Resume(uuid, fullName);
-            for (int i = 0; i < size; i++) {
-                resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
-            }
-            int sectionSize = dis.readInt();
-            for (int count = 0; count < sectionSize; count++) {
+            nextgenReader(dis, () -> resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
+            nextgenReader(dis, () -> {
                 SectionType st = SectionType.valueOf(dis.readUTF());
                 switch (st) {
                     case OBJECTIVE:
@@ -93,8 +93,8 @@ public class DataStreamSerializer implements Serializer {
                             List<Organization.Position> listPos = new ArrayList<>();
                             int posSize = dis.readInt();
                             for (int j = 0; j < posSize; j++) {
-                                LocalDate StatDate = LocalDate.of(dis.readInt(), dis.readInt(), 1);
-                                LocalDate EndDate = LocalDate.of(dis.readInt(), dis.readInt(), 1);
+                                LocalDate StatDate = dateReader(dis);
+                                LocalDate EndDate = dateReader(dis);
                                 String title = dis.readUTF();
                                 String description = dis.readUTF();
                                 Organization.Position position = new Organization.Position(StatDate, EndDate, title,
@@ -107,13 +107,22 @@ public class DataStreamSerializer implements Serializer {
                     default:
                         break;
                 }
-            }
+
+            });
             return resume;
         }
     }
 
+    private LocalDate dateReader(DataInputStream dis) throws IOException {
+        return LocalDate.of(dis.readInt(), dis.readInt(), 1);
+    }
+
     interface Writer<X> {
         void write(X x) throws IOException;
+    }
+
+    interface Reader {
+        void read() throws IOException;
     }
 
     private <X> void nextgenWriter(DataOutputStream dos,
@@ -121,6 +130,14 @@ public class DataStreamSerializer implements Serializer {
         dos.writeInt(collection.size());
         for (X item : collection) {
             writer.write(item);
+        }
+
+    }
+
+    private void nextgenReader(DataInputStream dis, Reader reader) throws IOException {
+        int size = dis.readInt();
+        for (int i = 0; i < size; i++) {
+            reader.read();
         }
     }
 }
