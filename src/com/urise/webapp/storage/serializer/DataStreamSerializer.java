@@ -15,11 +15,11 @@ public class DataStreamSerializer implements Serializer {
         try (DataOutputStream dos = new DataOutputStream(os)) {
             dos.writeUTF(resume.getUuid());
             dos.writeUTF(resume.getFullName());
-            nextgenWriter(dos, resume.getContacts().entrySet(), entry -> {
+            nextgenWrite(dos, resume.getContacts().entrySet(), entry -> {
                 dos.writeUTF(entry.getKey().name());
                 dos.writeUTF(entry.getValue());
             });
-            nextgenWriter(dos, resume.getSections().entrySet(), entry -> {
+            nextgenWrite(dos, resume.getSections().entrySet(), entry -> {
                 SectionType st = entry.getKey();
                 AbstractSection section = entry.getValue();
                 dos.writeUTF(st.name());
@@ -30,20 +30,22 @@ public class DataStreamSerializer implements Serializer {
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        nextgenWriter(dos, ((ListSection) section).getTextList(), dos::writeUTF);
+                        nextgenWrite(dos, ((ListSection) section).getTextList(), dos::writeUTF);
                         break;
                     case EXPERIENCE:
                     case EDUCATION:
-                        nextgenWriter(dos, ((OrganizationSection) section).getListOrganization(), organization -> {
+                        nextgenWrite(dos, ((OrganizationSection) section).getListOrganization(), organization -> {
                             final Link homePage = organization.getHomePage();
                             dos.writeUTF(homePage.getName());
                             final String url = homePage.getUrl();
                             dos.writeUTF(url == null ? "" : url);
-                            nextgenWriter(dos, organization.getPositions(), position -> {
+                            nextgenWrite(dos, organization.getPositions(), position -> {
                                 dateWriter(dos, position.getStartDate());
                                 dateWriter(dos, position.getEndDate());
                                 dos.writeUTF(position.getTitle());
-                                dos.writeUTF(position.getDescription() == null ? "" : position.getDescription());
+
+                                final String description = position.getDescription();
+                                dos.writeUTF(description == null ? "" : description);
                             });
                         });
                         break;
@@ -66,8 +68,8 @@ public class DataStreamSerializer implements Serializer {
             String uuid = dis.readUTF();
             String fullName = dis.readUTF();
             Resume resume = new Resume(uuid, fullName);
-            nextgenReader(dis, () -> resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
-            nextgenReader(dis, () -> {
+            nextgenRead(dis, () -> resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
+            nextgenRead(dis, () -> {
                 SectionType st = SectionType.valueOf(dis.readUTF());
                 switch (st) {
                     case OBJECTIVE:
@@ -77,17 +79,17 @@ public class DataStreamSerializer implements Serializer {
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
                         List<String> list = new ArrayList<>();
-                        nextgenReader(dis, () -> list.add(dis.readUTF()));
+                        nextgenRead(dis, () -> list.add(dis.readUTF()));
                         resume.addSection(st, new ListSection(list));
                         break;
                     case EXPERIENCE:
                     case EDUCATION:
-                        nextgenReader(dis, () -> {
+                        nextgenRead(dis, () -> {
                             String name = dis.readUTF();
                             String url = dis.readUTF();
                             Link link = new Link(name, url.equals("") ? null : url);
                             List<Organization.Position> listPos = new ArrayList<>();
-                            nextgenReader(dis, () -> {
+                            nextgenRead(dis, () -> {
                                 LocalDate StatDate = dateReader(dis);
                                 LocalDate EndDate = dateReader(dis);
                                 String title = dis.readUTF();
@@ -112,27 +114,27 @@ public class DataStreamSerializer implements Serializer {
         return LocalDate.of(dis.readInt(), dis.readInt(), 1);
     }
 
-    interface Writer<X> {
+    interface Write<X> {
         void write(X x) throws IOException;
     }
 
-    interface Reader {
+    interface Read {
         void read() throws IOException;
     }
 
-    private <X> void nextgenWriter(DataOutputStream dos,
-                                   Collection<X> collection, Writer<X> writer) throws IOException {
+    private <X> void nextgenWrite(DataOutputStream dos,
+                                   Collection<X> collection, Write<X> write) throws IOException {
         dos.writeInt(collection.size());
         for (X item : collection) {
-            writer.write(item);
+            write.write(item);
         }
 
     }
 
-    private void nextgenReader(DataInputStream dis, Reader reader) throws IOException {
+    private void nextgenRead(DataInputStream dis, Read read) throws IOException {
         int size = dis.readInt();
         for (int i = 0; i < size; i++) {
-            reader.read();
+            read.read();
         }
     }
 }
