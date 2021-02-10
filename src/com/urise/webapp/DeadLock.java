@@ -22,6 +22,7 @@ public class DeadLock {
         }
         System.out.println("Поток " + threadName + " - попытка вызова метода Lock объекта " + this.name);
         db.Lock(db);
+        System.out.println("Блокировка не сработала");
     }
 
     public static void main(String[] args) {
