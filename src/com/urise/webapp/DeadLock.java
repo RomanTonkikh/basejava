@@ -1,52 +1,38 @@
 package com.urise.webapp;
 
 public class DeadLock {
+    public String name;
 
-    static class One {
-        synchronized void doLock(Two two) {
-            String name = Thread.currentThread().getName();
-            System.out.println("Поток " + name + ", метод - One.doLock");
-            try {
-                Thread.sleep(1000);
-            } catch (Exception e) {
-                System.out.println(name + " прерван");
-            }
-            System.out.println("Поток " + name + " - попытка вызова two.notLock");
-            two.notLock();
-        }
-
-        synchronized void notLock() {
-            System.out.println(toString() + "DeadLock не сработал");
-        }
+    public DeadLock(String name) {
+        this.name = name;
     }
 
-    static class Two {
-        synchronized void doLock(One one) {
-            String name = Thread.currentThread().getName();
-            System.out.println("Поток " + name + ", метод - Two.doLock");
-            try {
-                Thread.sleep(1000);
-            } catch (Exception e) {
-                System.out.println(name + " прерван");
-            }
-            System.out.println("Поток " + name + " - попытка вызова one.notLock");
-            one.notLock();
-        }
+    public String getName() {
+        return name;
+    }
 
-        synchronized void notLock() {
-            System.out.println("DeadLock не сработал");
+    synchronized void Lock(DeadLock db) {
+        String threadName = Thread.currentThread().getName();
+
+        System.out.println("Поток " + threadName + ", метод - Lock, объект " + db.getName());
+        try {
+            Thread.sleep(1000);
+        } catch (Exception e) {
+            System.out.println(threadName + " прерван");
         }
+        System.out.println("Поток " + threadName + " - попытка вызова метода Lock объекта " + this.name);
+        db.Lock(db);
     }
 
     public static void main(String[] args) {
-        System.out.println("Запущен поток - " + Thread.currentThread().getName());
-        One one = new One();
-        Two two = new Two();
+        System.out.println("Запущен главный поток - " + Thread.currentThread().getName());
+        DeadLock db1 = new DeadLock("1");
+        DeadLock db2 = new DeadLock("2");
         new Thread(() -> {
             System.out.println("Запущен поток - " + Thread.currentThread().getName());
-            two.doLock(one);
+            db1.Lock(db2);
         }).start();
-        one.doLock(two);
+        db2.Lock(db1);
     }
 }
 
