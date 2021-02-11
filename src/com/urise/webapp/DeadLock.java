@@ -21,7 +21,7 @@ public class DeadLock {
             }
             System.out.println(name + " waiting to be captured " + object2);
             synchronized (object2) {
-                System.out.println("DeadLock не произошел");
+                System.out.println("DeadLock is dead");
             }
         }
     }
