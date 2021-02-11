@@ -1,39 +1,30 @@
 package com.urise.webapp;
 
+import java.util.Objects;
+
 public class DeadLock {
-    public String name;
-
-    public DeadLock(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    synchronized void Lock(DeadLock db) {
-        String threadName = Thread.currentThread().getName();
-
-        System.out.println("Поток " + threadName + ", метод - Lock, объект " + db.getName());
-        try {
-            Thread.sleep(1000);
-        } catch (Exception e) {
-            System.out.println(threadName + " прерван");
-        }
-        System.out.println("Поток " + threadName + " - попытка вызова метода Lock объекта " + this.name);
-        db.Lock(db);
-        System.out.println("Блокировка не сработала");
-    }
 
     public static void main(String[] args) {
-        System.out.println("Запущен главный поток - " + Thread.currentThread().getName());
-        DeadLock db1 = new DeadLock("1");
-        DeadLock db2 = new DeadLock("2");
-        new Thread(() -> {
-            System.out.println("Запущен поток - " + Thread.currentThread().getName());
-            db1.Lock(db2);
-        }).start();
-        db2.Lock(db1);
+        final DeadLock dl1 = new DeadLock();
+        final DeadLock dl2 = new DeadLock();
+        new Thread(() -> dl1.lock(dl1, dl2)).start();
+        new Thread(() -> dl2.lock(dl2, dl1)).start();
+    }
+
+    private void lock(DeadLock dl1, DeadLock dl2) {
+        synchronized (Objects.requireNonNull(dl1)) {
+            System.out.println("Объект " + dl1 + " используется");
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println("Попытка обращения к объекту " + dl2);
+            synchronized (Objects.requireNonNull(dl2)) {
+                System.out.println("DeadLock не произошел");
+            }
+        }
     }
 }
+
 
