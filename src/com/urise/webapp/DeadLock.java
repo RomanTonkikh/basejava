@@ -1,26 +1,26 @@
 package com.urise.webapp;
 
-import java.util.Objects;
 
 public class DeadLock {
 
     public static void main(String[] args) {
-        final DeadLock dl1 = new DeadLock();
-        final DeadLock dl2 = new DeadLock();
-        new Thread(() -> dl1.lock(dl1, dl2)).start();
-        new Thread(() -> dl2.lock(dl2, dl1)).start();
+        final String object1 = "object1";
+        final String object2 = "object2";
+        new Thread(() -> lock(object1, object2)).start();
+        new Thread(() -> lock(object2, object1)).start();
     }
 
-    private void lock(DeadLock dl1, DeadLock dl2) {
-        synchronized (Objects.requireNonNull(dl1)) {
-            System.out.println("Объект " + dl1 + " используется");
+    private static void lock(Object object1, Object object2) {
+        String name = Thread.currentThread().getName();
+        synchronized (object1) {
+            System.out.println(name+ " captured " + object1);
             try {
-                Thread.sleep(1000);
+                Thread.sleep(50);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            System.out.println("Попытка обращения к объекту " + dl2);
-            synchronized (Objects.requireNonNull(dl2)) {
+            System.out.println(name + " waiting to be captured " + object2);
+            synchronized (object2) {
                 System.out.println("DeadLock не произошел");
             }
         }
