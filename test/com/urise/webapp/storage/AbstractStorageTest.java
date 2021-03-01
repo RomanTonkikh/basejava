@@ -1,5 +1,6 @@
 package com.urise.webapp.storage;
 
+import com.urise.webapp.Config;
 import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.model.Resume;
@@ -15,20 +16,31 @@ import static com.urise.webapp.ResumeTestData.fillResume;
 import static org.junit.Assert.*;
 
 public abstract class AbstractStorageTest {
-    protected static final File STORAGE_DIR = new File("D:\\JAVA\\basejava\\basejava\\Storage");
+    protected static final File STORAGE_DIR = Config.getINSTANCE().getStorageDir();
     protected final Storage storage;
 
     protected static final String UUID_1 = "uuid_1";
-    protected static final Resume RESUME_1 = fillResume(UUID_1, "Elon Musk");
-
     protected static final String UUID_2 = "uuid_2";
-    protected static final Resume RESUME_2 = fillResume(UUID_2, "Mark Zuckerberg");
-
     protected static final String UUID_3 = "uuid_3";
-    protected static final Resume RESUME_3 = fillResume(UUID_3, "Bill Gates");
-
     protected static final String UUID_4 = "uuid_4";
+
+    private static final Resume RESUME_1;
+    private static final Resume RESUME_2;
+    private static final Resume RESUME_3;
+    private static final Resume RESUME_4;
+
+    static {
+        RESUME_1 = new Resume(UUID_1, "Elon Musk");
+        RESUME_2 = new Resume(UUID_2, "Mark Zuckerberg");
+        RESUME_3 = new Resume(UUID_3, "Bill Gates");
+        RESUME_4 = new Resume(UUID_4, "Steve Jobs");
+    }
+/*
+    protected static final Resume RESUME_1 = fillResume(UUID_1, "Elon Musk");
+    protected static final Resume RESUME_2 = fillResume(UUID_2, "Mark Zuckerberg");
+    protected static final Resume RESUME_3 = fillResume(UUID_3, "Bill Gates");
     protected static final Resume RESUME_4 = fillResume(UUID_4, "Steve Jobs");
+*/
 
     protected AbstractStorageTest(Storage storage) {
         this.storage = storage;

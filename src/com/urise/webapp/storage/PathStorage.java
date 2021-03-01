@@ -91,6 +91,7 @@ public class PathStorage extends AbstractStorage<Path> {
         List<Path> pathList = getPathList();
         return pathList.size();
     }
+
     private String getFileName(Path path) {
         return path.getFileName().toString();
     }
@@ -100,7 +101,7 @@ public class PathStorage extends AbstractStorage<Path> {
         try {
             pathList = Files.list(directory).collect(Collectors.toList());
         } catch (IOException e) {
-            throw new StorageException("Directory read error", null);
+            throw new StorageException("Directory read error", null, e);
         }
         return pathList;
     }
