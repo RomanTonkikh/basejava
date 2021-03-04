@@ -18,7 +18,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public void clear() {
-        sqlHelper.doConnection("DELETE FROM resume", ps -> {
+        sqlHelper.doSqlProcessing("DELETE FROM resume", ps -> {
             ps.execute();
             return null;
         });
@@ -26,7 +26,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public void update(Resume resume) {
-        sqlHelper.doConnection("UPDATE resume r SET full_name=? WHERE r.uuid=?", ps -> {
+        sqlHelper.doSqlProcessing("UPDATE resume r SET full_name=? WHERE r.uuid=?", ps -> {
             String uuid = resume.getUuid();
             ps.setString(2, uuid);
             ps.setString(1, resume.getFullName());
@@ -40,15 +40,7 @@ public class SqlStorage implements Storage {
     @Override
     public void save(Resume resume) {
         String uuid = resume.getUuid();
-        sqlHelper.doConnection("SELECT * FROM resume r WHERE r.uuid =?", ps -> {
-            ps.setString(1, uuid);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                throw new ExistStorageException(uuid);
-            }
-            return null;
-        });
-        sqlHelper.doConnection("INSERT INTO resume (uuid, full_name) VALUES (?,?)", ps -> {
+        sqlHelper.doSqlProcessing("INSERT INTO resume (uuid, full_name) VALUES (?,?)", ps -> {
             ps.setString(1, uuid);
             ps.setString(2, resume.getFullName());
             ps.execute();
@@ -58,7 +50,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public Resume get(String uuid) {
-        return sqlHelper.doConnection("SELECT * FROM resume r WHERE r.uuid =?", ps -> {
+        return sqlHelper.doSqlProcessing("SELECT * FROM resume r WHERE r.uuid =?", ps -> {
             ps.setString(1, uuid);
             ResultSet rs = ps.executeQuery();
             if (!rs.next()) {
@@ -70,7 +62,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public void delete(String uuid) {
-        sqlHelper.doConnection("DELETE FROM resume r WHERE r.uuid =?", ps -> {
+        sqlHelper.doSqlProcessing("DELETE FROM resume r WHERE r.uuid =?", ps -> {
             ps.setString(1, uuid);
             if (ps.executeUpdate() == 0) {
                 throw new NotExistStorageException(uuid);
@@ -81,12 +73,11 @@ public class SqlStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        return sqlHelper.doConnection("SELECT RTRIM(uuid) AS noSpacedUuid," +
-                "full_name FROM resume r ORDER BY full_name,uuid", ps -> {
+        return sqlHelper.doSqlProcessing("SELECT * FROM resume r ORDER BY full_name,uuid", ps -> {
             ResultSet rs = ps.executeQuery();
             List<Resume> resumeList = new ArrayList<>();
             while (rs.next()) {
-                resumeList.add(new Resume(rs.getString("noSpacedUuid"),
+                resumeList.add(new Resume(rs.getString("uuid"),
                         rs.getString("full_name")));
             }
             return resumeList;
@@ -95,12 +86,10 @@ public class SqlStorage implements Storage {
 
     @Override
     public int size() {
-        return sqlHelper.doConnection("SELECT COUNT(*) AS resumes_size FROM resume", ps -> {
+        return sqlHelper.doSqlProcessing("SELECT COUNT(*) FROM resume", ps -> {
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return rs.getInt("resumes_size");
-            }
-            return 0;
+            rs.next();
+            return rs.getInt(1);
         });
     }
 }

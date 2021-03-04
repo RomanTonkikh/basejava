@@ -11,6 +11,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import static com.urise.webapp.ResumeTestData.fillResume;
 import static org.junit.Assert.*;
@@ -19,10 +20,10 @@ public abstract class AbstractStorageTest {
     protected static final File STORAGE_DIR = Config.getINSTANCE().getStorageDir();
     protected final Storage storage;
 
-    protected static final String UUID_1 = "uuid_1";
-    protected static final String UUID_2 = "uuid_2";
-    protected static final String UUID_3 = "uuid_3";
-    protected static final String UUID_4 = "uuid_4";
+    protected static final String UUID_1 = UUID.randomUUID().toString();
+    protected static final String UUID_2 = UUID.randomUUID().toString();
+    protected static final String UUID_3 = UUID.randomUUID().toString();
+    protected static final String UUID_4 = UUID.randomUUID().toString() ;
 
     private static final Resume RESUME_1;
     private static final Resume RESUME_2;
