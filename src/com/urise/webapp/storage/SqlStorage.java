@@ -10,7 +10,8 @@ import java.util.*;
 
 public class SqlStorage implements Storage {
     public final SqlHelper sqlHelper;
-    public final Comparator<Resume> RESUME_COMPARATOR = Comparator.comparing(Resume::getFullName).thenComparing(Resume::getUuid);
+    public final Comparator<Resume> RESUME_COMPARATOR = Comparator.comparing(Resume::getFullName)
+            .thenComparing(Resume::getUuid);
 
     public SqlStorage(String dbUrl, String dbUser, String dbPassword) {
         sqlHelper = new SqlHelper(() -> DriverManager.getConnection(dbUrl, dbUser, dbPassword));
@@ -87,13 +88,6 @@ public class SqlStorage implements Storage {
                 });
     }
 
-    private void addContact(ResultSet rs, Resume resume) throws SQLException {
-        String value = rs.getString("value");
-        if (value != null) {
-            resume.addContact(ContactType.valueOf(rs.getString("type")), value);
-        }
-    }
-
     @Override
     public void delete(String uuid) {
         sqlHelper.execute("" +
@@ -144,6 +138,13 @@ public class SqlStorage implements Storage {
                     rs.next();
                     return rs.getInt(1);
                 });
+    }
+
+    private void addContact(ResultSet rs, Resume resume) throws SQLException {
+        String value = rs.getString("value");
+        if (value != null) {
+            resume.addContact(ContactType.valueOf(rs.getString("type")), value);
+        }
     }
 
     private void insertContact(Resume resume, String uuid, Connection conn) throws SQLException {
