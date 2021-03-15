@@ -3,6 +3,7 @@ package com.urise.webapp.storage;
 import com.urise.webapp.Config;
 import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.NotExistStorageException;
+import com.urise.webapp.model.ContactType;
 import com.urise.webapp.model.Resume;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,9 +33,17 @@ public abstract class AbstractStorageTest {
 
     static {
         RESUME_1 = new Resume(UUID_1, "Elon Musk");
+        RESUME_1.addContact(ContactType.PHONE,"111111");
+        RESUME_1.addContact(ContactType.SKYPE,"skype1");
         RESUME_2 = new Resume(UUID_2, "Mark Zuckerberg");
+        RESUME_2.addContact(ContactType.PHONE,"222222");
+        RESUME_2.addContact(ContactType.SKYPE,"skype2");
         RESUME_3 = new Resume(UUID_3, "Bill Gates");
+        RESUME_3.addContact(ContactType.PHONE,"333333");
+        RESUME_3.addContact(ContactType.SKYPE,"skype3");
         RESUME_4 = new Resume(UUID_4, "Steve Jobs");
+        RESUME_4.addContact(ContactType.PHONE,"444444");
+        RESUME_4.addContact(ContactType.SKYPE,"skype4");
     }
 /*
     protected static final Resume RESUME_1 = fillResume(UUID_1, "Elon Musk");
