@@ -73,6 +73,8 @@ public abstract class AbstractStorageTest {
     @Test
     public void update() {
         Resume result = new Resume(UUID_3, "Bill Gates");
+        result.addContact(ContactType.PHONE,"44444");
+        result.addContact(ContactType.SKYPE,"skype4");
         storage.update(result);
         assertEquals(result, storage.get(UUID_3));
     }
@@ -113,8 +115,8 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void getAllSorted() {
-        List<Resume> list = new ArrayList<>(storage.getAllSorted());
-        List<Resume> resultList = new ArrayList<>(Arrays.asList(RESUME_3, RESUME_1, RESUME_2));
+        List<Resume> list = storage.getAllSorted();
+        List<Resume> resultList = Arrays.asList(RESUME_3, RESUME_1, RESUME_2);
         assertEquals(resultList, list);
     }
 
