@@ -10,8 +10,6 @@ import java.util.*;
 
 public class SqlStorage implements Storage {
     public final SqlHelper sqlHelper;
-    public final Comparator<Resume> RESUME_COMPARATOR = Comparator.comparing(Resume::getFullName)
-            .thenComparing(Resume::getUuid);
 
     public SqlStorage(String dbUrl, String dbUser, String dbPassword) {
         sqlHelper = new SqlHelper(() -> DriverManager.getConnection(dbUrl, dbUser, dbPassword));
@@ -36,15 +34,13 @@ public class SqlStorage implements Storage {
                     throw new NotExistStorageException(uuid);
                 }
             }
-            sqlHelper.execute("" +
-                            " DELETE FROM contact c" +
-                            "       WHERE c.resume_uuid=?",
-                    ps -> {
-                        ps.setString(1, resume.getUuid());
-                        ps.execute();
-                        return null;
-                    });
-            insertContact(resume, uuid, conn);
+            try (PreparedStatement ps2 = conn.prepareStatement("" +
+                    " DELETE FROM contact c" +
+                    "       WHERE c.resume_uuid=?")) {
+                ps2.setString(1, resume.getUuid());
+                ps2.execute();
+            }
+            insertContact(resume, conn);
             return null;
         });
     }
@@ -60,7 +56,7 @@ public class SqlStorage implements Storage {
                         ps.setString(2, resume.getFullName());
                         ps.execute();
                     }
-                    insertContact(resume, uuid, conn);
+                    insertContact(resume, conn);
                     return null;
                 }
         );
@@ -112,7 +108,7 @@ public class SqlStorage implements Storage {
                         "  ORDER BY full_name, uuid",
                 ps -> {
                     ResultSet rs = ps.executeQuery();
-                    Map<String, Resume> resumes = new HashMap<>();
+                    Map<String, Resume> resumes = new LinkedHashMap<>();
                     while (rs.next()) {
                         String uuid = rs.getString("uuid");
                         Resume resume = resumes.get(uuid);
@@ -122,9 +118,7 @@ public class SqlStorage implements Storage {
                         }
                         addContact(rs, resume);
                     }
-                    List<Resume> list = new ArrayList<>(resumes.values());
-                    list.sort(RESUME_COMPARATOR);
-                    return list;
+                    return new ArrayList<>(resumes.values());
                 });
     }
 
@@ -147,12 +141,12 @@ public class SqlStorage implements Storage {
         }
     }
 
-    private void insertContact(Resume resume, String uuid, Connection conn) throws SQLException {
+    private void insertContact(Resume resume, Connection conn) throws SQLException {
         try (PreparedStatement ps = conn.prepareStatement("" +
                 " INSERT INTO contact (resume_uuid, type, value)" +
                 " VALUES (?,?,?)")) {
             for (Map.Entry<ContactType, String> entry : resume.getContacts().entrySet()) {
-                ps.setString(1, uuid);
+                ps.setString(1, resume.getUuid());
                 ps.setString(2, entry.getKey().name());
                 ps.setString(3, entry.getValue());
                 ps.addBatch();
