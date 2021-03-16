@@ -34,11 +34,11 @@ public class SqlStorage implements Storage {
                     throw new NotExistStorageException(uuid);
                 }
             }
-            try (PreparedStatement ps2 = conn.prepareStatement("" +
+            try (PreparedStatement ps = conn.prepareStatement("" +
                     " DELETE FROM contact c" +
                     "       WHERE c.resume_uuid=?")) {
-                ps2.setString(1, resume.getUuid());
-                ps2.execute();
+                ps.setString(1, resume.getUuid());
+                ps.execute();
             }
             insertContact(resume, conn);
             return null;

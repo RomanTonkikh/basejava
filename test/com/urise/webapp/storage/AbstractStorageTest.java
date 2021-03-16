@@ -24,33 +24,12 @@ public abstract class AbstractStorageTest {
     protected static final String UUID_1 = UUID.randomUUID().toString();
     protected static final String UUID_2 = UUID.randomUUID().toString();
     protected static final String UUID_3 = UUID.randomUUID().toString();
-    protected static final String UUID_4 = UUID.randomUUID().toString() ;
+    protected static final String UUID_4 = UUID.randomUUID().toString();
 
-    private static final Resume RESUME_1;
-    private static final Resume RESUME_2;
-    private static final Resume RESUME_3;
-    private static final Resume RESUME_4;
-
-    static {
-        RESUME_1 = new Resume(UUID_1, "Elon Musk");
-        RESUME_1.addContact(ContactType.PHONE,"111111");
-        RESUME_1.addContact(ContactType.SKYPE,"skype1");
-        RESUME_2 = new Resume(UUID_2, "Mark Zuckerberg");
-        RESUME_2.addContact(ContactType.PHONE,"222222");
-        RESUME_2.addContact(ContactType.SKYPE,"skype2");
-        RESUME_3 = new Resume(UUID_3, "Bill Gates");
-        RESUME_3.addContact(ContactType.PHONE,"333333");
-        RESUME_3.addContact(ContactType.SKYPE,"skype3");
-        RESUME_4 = new Resume(UUID_4, "Steve Jobs");
-        RESUME_4.addContact(ContactType.PHONE,"444444");
-        RESUME_4.addContact(ContactType.SKYPE,"skype4");
-    }
-/*
     protected static final Resume RESUME_1 = fillResume(UUID_1, "Elon Musk");
     protected static final Resume RESUME_2 = fillResume(UUID_2, "Mark Zuckerberg");
     protected static final Resume RESUME_3 = fillResume(UUID_3, "Bill Gates");
     protected static final Resume RESUME_4 = fillResume(UUID_4, "Steve Jobs");
-*/
 
     protected AbstractStorageTest(Storage storage) {
         this.storage = storage;
@@ -73,8 +52,8 @@ public abstract class AbstractStorageTest {
     @Test
     public void update() {
         Resume result = new Resume(UUID_3, "Bill Gates");
-        result.addContact(ContactType.PHONE,"44444");
-        result.addContact(ContactType.SKYPE,"skype4");
+        result.addContact(ContactType.PHONE, "44444");
+        result.addContact(ContactType.SKYPE, "skype4");
         storage.update(result);
         assertEquals(result, storage.get(UUID_3));
     }
