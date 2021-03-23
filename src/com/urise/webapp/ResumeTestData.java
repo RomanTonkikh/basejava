@@ -31,10 +31,10 @@ public class ResumeTestData {
         resume.addContact(ContactType.STACKOVERFLOW, "romanStackoverflow");
         resume.addContact(ContactType.HOMEPAGE, "romanHomepage");
 
-//        resume.addSection(SectionType.OBJECTIVE, new TextSection("Ученик"));
-//        resume.addSection(SectionType.PERSONAL, new TextSection("Трудолюбие, целеустремленность, активность, коммуникабельность"));
-//        resume.addSection(SectionType.ACHIEVEMENT, new ListSection("Учусь", "Учусь", "Учусь"));
-//        resume.addSection(SectionType.QUALIFICATIONS, new ListSection("Java syntax", "Java core"));
+        resume.addSection(SectionType.OBJECTIVE, new TextSection("Ученик"));
+        resume.addSection(SectionType.PERSONAL, new TextSection("Трудолюбие, целеустремленность, активность, коммуникабельность"));
+        resume.addSection(SectionType.ACHIEVEMENT, new ListSection("Учусь", "Учусь", "Учусь"));
+        resume.addSection(SectionType.QUALIFICATIONS, new ListSection("Java syntax", "Java core"));
 //        resume.addSection(SectionType.EXPERIENCE, new OrganizationSection(new Organization("JavaRush", null,
 //                new Organization.Position(2020, Month.AUGUST, 2020, Month.SEPTEMBER, "Ученик", "Изучал Java syntax"),
 //                new Organization.Position(2020, Month.SEPTEMBER, 2020, Month.OCTOBER, "Ученик", null))));
