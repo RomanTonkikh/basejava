@@ -224,25 +224,22 @@ public class SqlStorage implements Storage {
             for (Map.Entry<SectionType, AbstractSection> entry : resume.getSections().entrySet()) {
                 SectionType st = entry.getKey();
                 AbstractSection section = entry.getValue();
+                ps.setString(1, resume.getUuid());
+                ps.setString(2, entry.getKey().name());
                 switch (st) {
                     case OBJECTIVE:
                     case PERSONAL:
-                        ps.setString(1, resume.getUuid());
-                        ps.setString(2, entry.getKey().name());
                         ps.setString(3, ((TextSection) section).getContent());
                         ps.addBatch();
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        StringBuilder sb = new StringBuilder();
-                        ps.setString(1, resume.getUuid());
-                        ps.setString(2, entry.getKey().name());
+                        StringJoiner joiner = new StringJoiner("\n");
                         List<String> list = ((ListSection) section).getTextList();
                         for (String text : list) {
-                            sb.append(text);
-                            sb.append("\n");
+                            joiner.add(text);
                         }
-                        ps.setString(3, sb.toString());
+                        ps.setString(3, joiner.toString());
                         ps.addBatch();
                         break;
                 }

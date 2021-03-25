@@ -15,8 +15,13 @@ import java.util.Map;
 
 
 public class ResumeServlet extends HttpServlet {
+    private Storage storage;
 
-    private final Storage storage = Config.getINSTANCE().getStorage();
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        storage = Config.getINSTANCE().getStorage();
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -55,7 +60,11 @@ public class ResumeServlet extends HttpServlet {
             }
             responseWriter.write("/<html>");
         }
+
+        request.setAttribute("resumes", storage.getAllSorted());
+        request.getRequestDispatcher("/WEB-INF/jsp/list.jsp").forward(request, response);
     }
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     }
