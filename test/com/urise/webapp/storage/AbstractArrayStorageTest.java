@@ -6,6 +6,8 @@ import com.urise.webapp.model.Resume;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.UUID;
+
 import static com.urise.webapp.storage.AbstractArrayStorage.STORAGE_LIMIT;
 
 public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
@@ -22,6 +24,6 @@ public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
                 Assert.fail("Overflowing happened ahead of time");
             }
         }
-        storage.save(new Resume(UUID_4, "Steve Jobs"));
+        storage.save(new Resume(UUID.randomUUID().toString(), "Steve Jobs"));
     }
 }

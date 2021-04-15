@@ -9,27 +9,15 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
-import static com.urise.webapp.ResumeTestData.fillResume;
+import static com.urise.webapp.TestData.*;
 import static org.junit.Assert.*;
 
 public abstract class AbstractStorageTest {
     protected static final File STORAGE_DIR = Config.getINSTANCE().getStorageDir();
     protected final Storage storage;
-
-    protected static final String UUID_1 = UUID.randomUUID().toString();
-    protected static final String UUID_2 = UUID.randomUUID().toString();
-    protected static final String UUID_3 = UUID.randomUUID().toString();
-    protected static final String UUID_4 = UUID.randomUUID().toString();
-
-    protected static final Resume RESUME_1 = fillResume(UUID_1, "Elon Musk");
-    protected static final Resume RESUME_2 = fillResume(UUID_2, "Mark Zuckerberg");
-    protected static final Resume RESUME_3 = fillResume(UUID_3, "Bill Gates");
-    protected static final Resume RESUME_4 = fillResume(UUID_4, "Steve Jobs");
 
     protected AbstractStorageTest(Storage storage) {
         this.storage = storage;
