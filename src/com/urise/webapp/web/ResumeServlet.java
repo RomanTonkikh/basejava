@@ -1,17 +1,19 @@
 package com.urise.webapp.web;
 
 import com.urise.webapp.Config;
-import com.urise.webapp.model.ContactType;
-import com.urise.webapp.model.Resume;
+import com.urise.webapp.model.*;
 import com.urise.webapp.storage.Storage;
-
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.UUID;
+
+
+import static com.urise.webapp.model.SectionType.EXPERIENCE;
 
 
 public class ResumeServlet extends HttpServlet {
-
     private Storage storage;
 
     @Override
@@ -31,6 +33,25 @@ public class ResumeServlet extends HttpServlet {
             String value = request.getParameter(type.name());
             if (value != null && value.trim().length() != 0) {
                 resume.addContact(type, value);
+            } else {
+                resume.getContacts().remove(type);
+            }
+        }
+        for (SectionType type : SectionType.values()) {
+            String[] values = request.getParameterValues(type.name());
+            if (values != null && values.length != 0) {
+                switch (type) {
+                    case OBJECTIVE:
+                    case PERSONAL:
+                        resume.addSection(type, new TextSection(values[0]));
+                        break;
+                    case ACHIEVEMENT:
+                    case QUALIFICATIONS:
+                        resume.addSection(type, new ListSection(Arrays.asList(values)));
+                        break;
+                    default:
+                        return;
+                }
             } else {
                 resume.getContacts().remove(type);
             }
@@ -57,6 +78,9 @@ public class ResumeServlet extends HttpServlet {
             case "view":
             case "edit":
                 resume = storage.get(uuid);
+                break;
+            case "create":
+                resume = storage.get(UUID.randomUUID().toString());
                 break;
             default:
                 throw new IllegalArgumentException("Action " + action + " is illegal");

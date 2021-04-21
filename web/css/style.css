@@ -3,6 +3,7 @@ header {
     color: #2E6E9E;
     font-size: 20px;
     padding: 5px 20px;
+    text-align: center;
 }
 
 footer {
@@ -11,6 +12,7 @@ footer {
     font-size: 20px;
     padding: 5px 20px;
     margin: 20px 0;
+    text-align: center;
 }
 dl {
     background: none repeat scroll 0 0 #FAFAFA;
@@ -25,4 +27,44 @@ dd {
     display: inline-block;
     margin-left: 8px;
     vertical-align: top;
+}
+
+tr.view td {
+    font-size: 18px;
+    horiz-align: left;
+}
+
+tr.list td,th {
+    border: 1px solid;
+    padding: 5px;
+}
+
+#date {
+    width: 20%;
+    vertical-align: top;
+    padding-top: 0;
+}
+
+li {
+    font-size: 18px;
+}
+#tableList {
+    width: 500px;
+    margin: 0 auto;
+    border-collapse: collapse;
+}
+
+#tableView {
+    width: 1000px;
+    margin: 0 auto;
+}
+
+#edit {
+    width: 800px;
+    margin: 0 auto;
+}
+
+#create {
+    width: 180px;
+    margin: 0 auto;
 }

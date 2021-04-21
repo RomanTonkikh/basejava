@@ -93,7 +93,7 @@ public class Organization implements Serializable {
             this.endDate = endDate;
             this.title = title;
             this.description = description;
-           }
+        }
 
         public LocalDate getStartDate() {
             return startDate;
@@ -109,6 +109,12 @@ public class Organization implements Serializable {
 
         public String getDescription() {
             return description;
+        }
+
+        public String getDate() {
+            return (endDate.isAfter(LocalDate.now())) ? startDate.getMonthValue() + "/" + startDate.getYear()
+                    + " - Cейчас" : startDate.getMonthValue() + "/" + startDate.getYear()
+                    + " - " + endDate.getMonthValue() + "/" + endDate.getYear();
         }
 
         @Override

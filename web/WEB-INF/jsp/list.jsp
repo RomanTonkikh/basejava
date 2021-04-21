@@ -10,25 +10,31 @@
 </head>
 <body>
 <jsp:include page="fragments/header.jsp"/>
-<section>
-    <table border="1" cellpadding="8" celspacing="0">
-        <tr>
-            <th>Имя</th>
-            <th>Email</th>
-            <th></th>
-            <th></th>
+
+<table id="tableList">
+    <tr class="list">
+        <th>Имя</th>
+        <th>Email</th>
+        <th></th>
+        <th></th>
+    </tr>
+    <c:forEach var="resume" items="${resumes}">
+        <jsp:useBean id="resume" type="com.urise.webapp.model.Resume"/>
+        <tr class="list">
+            <td><a href="resume?uuid=${resume.uuid}&action=view">${resume.fullName}</a></td>
+            <td><%=ContactType.EMAIL.toHtml(resume.getContact(ContactType.EMAIL))%>
+            </td>
+            <td><a href="resume?uuid=${resume.uuid}&action=delete"><img src="img/delete.png" width="16" height="16"
+                                                                        alt="Delete"></a></td>
+            <td><a href="resume?uuid=${resume.uuid}&action=edit"><img src="img/pencil.png" width="16" height="16"
+                                                                      alt="Edit"></a></td>
         </tr>
-        <c:forEach var="resume" items="${resumes}">
-          <jsp:useBean id="resume" type="com.urise.webapp.model.Resume"/>
-            <tr>
-                <td><a href="resume?uuid=${resume.uuid}&action=view">${resume.fullName}</a></td>
-                <td><%=ContactType.EMAIL.toHtml(resume.getContact(ContactType.EMAIL))%></td>
-                <td><a href="resume?uuid=${resume.uuid}&action=delete"><img src="img/delete.png" width="16" height="16" alt="Delete"></a></td>
-                <td><a href="resume?uuid=${resume.uuid}&action=edit"><img src="img/pencil.png" width="16" height="16" alt="Edit"></a></td>
-            </tr>
-        </c:forEach>
-    </table>
-    <jsp:include page="fragments/footer.jsp"/>
-</section>
+    </c:forEach>
+</table>
+<br/>
+<%--<form id="create">--%>
+<%--    <button><a href="resume?uuid=${resume.uuid}&action=create">Создать новое резюме</a></button>--%>
+<%--</form>--%>
+<jsp:include page="fragments/footer.jsp"/>
 </body>
 </html>

@@ -5,13 +5,13 @@ public enum ContactType {
     SKYPE("Скайп") {
         @Override
         public String toHtml0(String value) {
-            return "<a href='skype:" + value + "'>" + value + "</a>";
+            return getTitle() + ": " + "<a href=skype:>" + value + "</a>";
         }
     },
     EMAIL("Электронная почта") {
         @Override
         public String toHtml0(String value) {
-            return "<a href='mailto:" + value + "'>" + value + "</a>";
+            return getTitle() + ": " + "<a href=mailto:>" + value + "</a>";
         }
     },
     LINKEDIN("Аккаунт в LinkedIn"),
@@ -28,9 +28,11 @@ public enum ContactType {
     public String getTitle() {
         return title;
     }
+
     protected String toHtml0(String value) {
         return title + ": " + value;
     }
+
     public String toHtml(String value) {
         return (value == null) ? "" : toHtml0(value);
     }
