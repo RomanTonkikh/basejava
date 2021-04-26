@@ -32,9 +32,9 @@
     </c:forEach>
 </table>
 <br/>
-<%--<form id="create">--%>
-<%--    <button><a href="resume?uuid=${resume.uuid}&action=create">Создать новое резюме</a></button>--%>
-<%--</form>--%>
+<form id="create">
+    <button><a href="resume?action=create">Создать новое резюме</a></button>
+</form>
 <jsp:include page="fragments/footer.jsp"/>
 </body>
 </html>

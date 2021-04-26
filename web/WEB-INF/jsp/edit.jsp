@@ -10,11 +10,13 @@
     <meta http-equiv="Content-Type" content="text/html" ; charset="UTF-8">
     <link rel="stylesheet" href="css/style.css">
     <jsp:useBean id="resume" type="com.urise.webapp.model.Resume" scope="request"/>
+
+
     <title>Резюме ${resume.fullName}</title>
 </head>
 <body>
 <jsp:include page="fragments/header.jsp"/>
-
+<section>
     <form id="edit" method="post" action="resume" enctype="application/x-www-form-urlencoded">
         <input type="hidden" name="uuid" value="${resume.uuid}">
         <dl>
@@ -22,7 +24,6 @@
             <dd><input type="text" name="fullName" size=50 value="${resume.fullName}"></dd>
         </dl>
         <h3>Контакты:</h3>
-
         <c:forEach var="contactType" items="<%=ContactType.values()%>">
             <dl>
                 <dt>${contactType.title}</dt>
@@ -31,41 +32,38 @@
             </dl>
         </c:forEach>
         <h3>Секции:</h3>
-
-        <c:forEach var="sectionEntry" items="${resume.sections}">
-            <jsp:useBean id="sectionEntry"
-                         type="java.util.Map.Entry<com.urise.webapp.model.SectionType,
-                         com.urise.webapp.model.AbstractSection>"/>
+        <c:forEach var="sectionType" items="<%=SectionType.values()%>" begin="0" end="3">
+            <c:set var="section" value="${resume.getSection(sectionType)}"/>
+            <jsp:useBean id="section" type="com.urise.webapp.model.AbstractSection"/>
             <c:choose>
-                <c:when test="${sectionEntry.key == SectionType.OBJECTIVE || sectionEntry.key == SectionType.PERSONAL}">
+                <c:when test="${sectionType.name() == SectionType.OBJECTIVE || sectionType.name() == SectionType.PERSONAL}">
                     <dl>
-                        <dt>${sectionEntry.key.title}</dt>
-                        <c:set var="textSection" value="<%=((TextSection) resume.getSection(sectionEntry.getKey()))%>"/>
-                        <dd><input type="text" name="${sectionEntry.key}"
-                                   size=80 value="${textSection.content}"></dd>
+                        <dt>${sectionType.title}</dt>
+                        <dd><input type="text" name="${sectionType.name()}"
+                                   size=80
+                                   value="<%=((TextSection) section).getContent()%>">
+                        </dd>
                     </dl>
                 </c:when>
-                <c:when test="${sectionEntry.key == SectionType.ACHIEVEMENT ||
-                 sectionEntry.key == SectionType.QUALIFICATIONS}">
-                    <c:set var="listSection" value="<%=((ListSection) resume.getSection(sectionEntry.getKey()))%>"/>
-                    <c:forEach var="text" items="${listSection.textList}">
-                        <dl>
-                            <dt>${sectionEntry.key.title}</dt>
-                            <dd><input type="text" name="${sectionEntry.key}"
-                                       size=80 value="${text}"></dd>
-                        </dl>
-                    </c:forEach>
+                <c:when test="${sectionType.name() == SectionType.ACHIEVEMENT ||
+                sectionType.name() == SectionType.QUALIFICATIONS}">
+                    <dl>
+                        <dd>${sectionType.title}</dd>
+                        <dt><textarea name="${sectionType.name()}" cols=50 rows="5"><%= String.
+                                join("\n", ((ListSection) section).getTextList())%></textarea></dt>
+                    </dl>
                 </c:when>
-                <c:when test="${sectionEntry.key == SectionType.EXPERIENCE ||
-                 sectionEntry.key == SectionType.EDUCATION}"/>
-
+                <c:when test="${sectionType.name() == SectionType.EXPERIENCE ||
+                sectionType.name() == SectionType.EDUCATION}">
+                </c:when>
                 <c:otherwise></c:otherwise>
             </c:choose>
         </c:forEach>
         <hr>
         <button type="submit">Сохранить</button>
-        <button onclick="window.history.back()">Отменить</button>
+        <button type="reset" onclick="window.history.back()">Отменить</button>
     </form>
+</section>
 <jsp:include page="fragments/footer.jsp"/>
 </body>
 </html>

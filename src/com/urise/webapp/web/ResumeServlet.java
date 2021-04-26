@@ -3,15 +3,11 @@ package com.urise.webapp.web;
 import com.urise.webapp.Config;
 import com.urise.webapp.model.*;
 import com.urise.webapp.storage.Storage;
+
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.UUID;
-
-
-import static com.urise.webapp.model.SectionType.EXPERIENCE;
-
 
 public class ResumeServlet extends HttpServlet {
     private Storage storage;
@@ -23,12 +19,18 @@ public class ResumeServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws
+            javax.servlet.ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         String uuid = request.getParameter("uuid");
         String fullName = request.getParameter("fullName");
-        Resume resume = storage.get(uuid);
-        resume.setFullName(fullName);
+        Resume resume;
+        if (uuid == null) {
+            resume = new Resume(fullName);
+        } else {
+            resume = storage.get(uuid);
+            resume.setFullName(fullName);
+        }
         for (ContactType type : ContactType.values()) {
             String value = request.getParameter(type.name());
             if (value != null && value.trim().length() != 0) {
@@ -38,30 +40,33 @@ public class ResumeServlet extends HttpServlet {
             }
         }
         for (SectionType type : SectionType.values()) {
-            String[] values = request.getParameterValues(type.name());
-            if (values != null && values.length != 0) {
+            String value = request.getParameter(type.name());
+            if (value != null && value.trim().length() != 0) {
                 switch (type) {
                     case OBJECTIVE:
                     case PERSONAL:
-                        resume.addSection(type, new TextSection(values[0]));
+                        resume.addSection(type, new TextSection(value));
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        resume.addSection(type, new ListSection(Arrays.asList(values)));
+                        resume.addSection(type, new ListSection(value.split("\n")));
                         break;
-                    default:
-                        return;
                 }
             } else {
-                resume.getContacts().remove(type);
+                resume.getSections().remove(type);
             }
         }
-        storage.update(resume);
+        if ((uuid == null)) {
+            storage.save(resume);
+        } else {
+            storage.update(resume);
+        }
         response.sendRedirect("resume");
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws javax.servlet.ServletException, IOException {
         String uuid = request.getParameter("uuid");
         String action = request.getParameter("action");
         if (action == null) {
@@ -78,9 +83,29 @@ public class ResumeServlet extends HttpServlet {
             case "view":
             case "edit":
                 resume = storage.get(uuid);
+                for (SectionType type : SectionType.values()) {
+                    AbstractSection section = resume.getSection(type);
+                    switch (type) {
+                        case OBJECTIVE:
+                        case PERSONAL:
+                            if (section == null) {
+                                resume.addSection(type, new TextSection(""));
+                            }
+                            break;
+                        case ACHIEVEMENT:
+                        case QUALIFICATIONS:
+                            if (section == null) {
+                                resume.addSection(type, new ListSection(""));
+                            }
+                    }
+                }
                 break;
             case "create":
-                resume = storage.get(UUID.randomUUID().toString());
+                resume = new Resume(UUID.randomUUID().toString(), "");
+                resume.addSection(SectionType.OBJECTIVE, new TextSection(""));
+                resume.addSection(SectionType.PERSONAL, new TextSection(""));
+                resume.addSection(SectionType.ACHIEVEMENT, new ListSection(""));
+                resume.addSection(SectionType.QUALIFICATIONS, new ListSection(""));
                 break;
             default:
                 throw new IllegalArgumentException("Action " + action + " is illegal");
@@ -89,77 +114,8 @@ public class ResumeServlet extends HttpServlet {
         request.getRequestDispatcher(
                 ("view".equals(action) ? "/WEB-INF/jsp/view.jsp" : "WEB-INF/jsp/edit.jsp")
         ).forward(request, response);
-
-
-//        request.setCharacterEncoding("UTF-8");
-//        response.setCharacterEncoding("UTF-8");
-//        response.setContentType("text/html; charset=UTF-8");
-//        Writer writer = response.getWriter();
-//        writer.write(
-//                "<html>\n" +
-//                        "<head>\n" +
-//                        "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n" +
-//                        "    <link rel=\"stylesheet\" href=\"css/style.css\">\n" +
-//                        "    <title>Список всех резюме</title>\n" +
-//                        "</head>\n" +
-//                        "<body>\n" +
-//                        "<section>\n" +
-//                        "<table border=\"1\" cellpadding=\"8\" cellspacing=\"0\">\n" +
-//                        "    <tr>\n" +
-//                        "        <th>Имя</th>\n" +
-//                        "        <th>Email</th>\n" +
-//                        "    </tr>\n");
-//        for (Resume resume : storage.getAllSorted()) {
-//            writer.write(
-//                    "<tr>\n" +
-//                            "     <td><a href=\"resume?uuid=" + resume.getUuid() + "\">" + resume.getFullName() + "</a></td>\n" +
-//                            "     <td>" + resume.getContact(ContactType.EMAIL) + "</td>\n" +
-//                            "</tr>\n");
-//        }
-//        writer.write("</table>\n" +
-//                "</section>\n" +
-//                "</body>\n" +
-//                "</html>\n");
     }
 }
-
-
-//        String uuid = request.getParameter("uuid");
-//        PrintWriter responseWriter = response.getWriter();
-//        if (uuid == null) {
-//            responseWriter.write("<html>" +
-//                    "<head>" +
-//                    "<table border=\"1\">" +
-//                    "<tr>" +
-//                    "<th>Uuid</th>" +
-//                    "<th>Full name</th>" +
-//                    "</tr>");
-//
-//            for (Resume resume : storage.getAllSorted()) {
-//                responseWriter.write("<tr>" +
-//                        "<td>" + resume.getUuid() +
-//                        "<td>" + resume.getFullName() +
-//                        "</td>" +
-//                        "</tr>");
-//            }
-//            responseWriter.write("</table>" +
-//                    "</head>" +
-//                    "</html>");
-//        } else {
-//            Resume resume = storage.get(uuid);
-//            responseWriter.write("<html>" + resume.toString() + "<br>");
-//            for (Map.Entry<ContactType, String> entry : resume.getContacts().entrySet()) {
-//                responseWriter.write(entry.getKey().getTitle() + ": " + entry.getValue() + "<br>");
-//            }
-//            for (Map.Entry<SectionType, AbstractSection> entry : resume.getSections().entrySet()) {
-//                responseWriter.write(entry.getKey().getTitle() + ": " + entry.getValue() + "<br>");
-//            }
-//            responseWriter.write("/<html>");
-//        }
-//
-//        request.setAttribute("resumes", storage.getAllSorted());
-//        request.getRequestDispatcher("/WEB-INF/jsp/list.jsp").forward(request, response);
-//    }
 
 
 

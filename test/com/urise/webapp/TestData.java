@@ -5,7 +5,6 @@ import com.urise.webapp.model.*;
 import java.time.Month;
 import java.util.UUID;
 
-
 public class TestData {
     public static final String UUID_1 = UUID.randomUUID().toString();
     public static final String UUID_2 = UUID.randomUUID().toString();
