@@ -1,6 +1,7 @@
 <%@ page import="com.urise.webapp.model.SectionType" %>
 <%@ page import="com.urise.webapp.model.ListSection" %>
 <%@ page import="com.urise.webapp.model.OrganizationSection" %>
+<%@ page import="com.urise.webapp.model.TextSection" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
@@ -10,14 +11,6 @@
     <link rel="stylesheet" href="css/style.css">
     <jsp:useBean id="resume" type="com.urise.webapp.model.Resume" scope="request"/>
     <title>Резюме ${resume.fullName}</title>
-
-    <%--
-    <%
-    Resume r1 = (Resume) request.getAttribute("resume");
-    request.setAttribute("resum",r1);
-    %>
-    --%>
-
 </head>
 <body>
 <jsp:include page="fragments/header.jsp"/>
@@ -36,37 +29,34 @@
             </td>
         </tr>
     </c:forEach>
-
-    <tr class="view">
-        <td colspan="2">
-            <hr>
-        </td>
-    </tr>
     <c:forEach var="sectionEntry" items="${resume.sections}">
-    <jsp:useBean id="sectionEntry"
-                 type="java.util.Map.Entry<com.urise.webapp.model.SectionType,
-                         com.urise.webapp.model.AbstractSection>"/>
+    <c:set var="sectionType" value="${sectionEntry.key}"/>
+    <jsp:useBean id="sectionType" type="com.urise.webapp.model.SectionType"/>
+    <c:set var="section" value="${sectionEntry.value}"/>
+    <jsp:useBean id="section" type="com.urise.webapp.model.AbstractSection"/>
     <c:choose>
-    <c:when test="${sectionEntry.key == SectionType.OBJECTIVE || sectionEntry.key == SectionType.PERSONAL}">
+    <c:when test="${sectionType == SectionType.OBJECTIVE || sectionType == SectionType.PERSONAL}">
+        <c:if test="${section ne ''}">
         <tr class="view">
-            <td colspan="2"><h2>${sectionEntry.key.title}</h2></td>
+            <td colspan="2"><h2>${sectionType.title}</h2></td>
         </tr>
         <tr class="view">
             <td colspan="2">
-                ${sectionEntry.value}
+                <%=((TextSection) section).getContent()%>
             </td>
+        </tr>
+        </c:if>
+    </c:when>
+    <c:when test="${sectionType == SectionType.ACHIEVEMENT || sectionType == SectionType.QUALIFICATIONS}">
+        <c:set var="listSection" value="<%=((ListSection) section)%>"/>
+        <jsp:useBean id="listSection" type="com.urise.webapp.model.ListSection"/>
+        <c:if test="${listSection.textList ne '[]'}">
+        <tr class="view">
+            <td colspan="2"><h2>${sectionType.title}</h2></td>
         </tr>
 
-    </c:when>
-    <c:when test="${sectionEntry.key == SectionType.ACHIEVEMENT || sectionEntry.key == SectionType.QUALIFICATIONS}">
+        <c:forEach var="text" items="<%=((ListSection) section).getTextList()%>">
         <tr class="view">
-            <td colspan="2">
-                <h2>${sectionEntry.key.title}</h2>
-            </td>
-           </tr>
-        <c:set var="listSection" value="<%=((ListSection)sectionEntry.getValue()).getTextList()%>"/>
-        <c:forEach var="text" items="${listSection}">
-            <tr class="view">
                 <td colspan="2">
                     <ul>
                         <li>${text}</li>
@@ -74,14 +64,14 @@
                 </td>
             </tr>
         </c:forEach>
+        </c:if>
     </c:when>
-    <c:when test="${sectionEntry.key == SectionType.EXPERIENCE || sectionEntry.key == SectionType.EDUCATION}">
+    <c:when test="${sectionType == SectionType.EXPERIENCE || sectionType == SectionType.EDUCATION}">
     <tr class="view">
-        <td colspan="2"><h2>${sectionEntry.key.title}</h2></td>
+        <td colspan="2"><h2>${sectionType.title}</h2></td>
     </tr>
-    <c:set var="orgSection"
-           value="<%=((OrganizationSection)sectionEntry.getValue()).getListOrganization()%>"/>
-    <c:forEach var="organization" items="${orgSection}">
+    <c:forEach var="organization" items="<%=((OrganizationSection) section).getListOrganization()%>">
+
     <tr class="view">
         <td colspan="2"><h3>${organization.homePage.link}</h3></td>
     </tr>

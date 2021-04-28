@@ -11,7 +11,7 @@ public enum ContactType {
     EMAIL("Электронная почта") {
         @Override
         public String toHtml0(String value) {
-            return getTitle() + ": " + "<a href=mailto:>" + value + "</a>";
+            return "<a href=mailto:>" + value + "</a>";
         }
     },
     LINKEDIN("Аккаунт в LinkedIn"),

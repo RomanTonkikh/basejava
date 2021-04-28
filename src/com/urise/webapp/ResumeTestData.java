@@ -35,11 +35,11 @@ public class ResumeTestData {
         resume.addSection(SectionType.PERSONAL, new TextSection("Трудолюбие, целеустремленность, активность, коммуникабельность"));
         resume.addSection(SectionType.ACHIEVEMENT, new ListSection("Учусь", "Учусь", "Учусь"));
         resume.addSection(SectionType.QUALIFICATIONS, new ListSection("Java syntax", "Java core"));
-//        resume.addSection(SectionType.EXPERIENCE, new OrganizationSection(new Organization("JavaRush", null,
-//                new Organization.Position(2020, Month.AUGUST, 2020, Month.SEPTEMBER, "Ученик", "Изучал Java syntax"),
-//                new Organization.Position(2020, Month.SEPTEMBER, 2020, Month.OCTOBER, "Ученик", null))));
-//        resume.addSection(SectionType.EDUCATION, new OrganizationSection(new Organization("Java Online Projects", "https://javaops.ru/",
-//                new Organization.Position(2020, Month.NOVEMBER, "Ученик", "Изучаю Java на примере создания web приложения"))));
+        resume.addSection(SectionType.EXPERIENCE, new OrganizationSection(new Organization("JavaRush", null,
+                new Organization.Position(2020, Month.AUGUST, 2020, Month.SEPTEMBER, "Ученик", "Изучал Java syntax"),
+                new Organization.Position(2020, Month.SEPTEMBER, 2020, Month.OCTOBER, "Ученик", null))));
+        resume.addSection(SectionType.EDUCATION, new OrganizationSection(new Organization("Java Online Projects", "https://javaops.ru/",
+                new Organization.Position(2020, Month.NOVEMBER, "Ученик", "Изучаю Java на примере создания web приложения"))));
         return resume;
     }
 }

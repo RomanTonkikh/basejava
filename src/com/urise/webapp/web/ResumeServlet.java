@@ -7,7 +7,9 @@ import com.urise.webapp.storage.Storage;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.IOException;
-import java.util.UUID;
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class ResumeServlet extends HttpServlet {
     private Storage storage;
@@ -25,7 +27,7 @@ public class ResumeServlet extends HttpServlet {
         String uuid = request.getParameter("uuid");
         String fullName = request.getParameter("fullName");
         Resume resume;
-        if (uuid == null) {
+        if (uuid == null || uuid.length() == 0) {
             resume = new Resume(fullName);
         } else {
             resume = storage.get(uuid);
@@ -49,14 +51,20 @@ public class ResumeServlet extends HttpServlet {
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        resume.addSection(type, new ListSection(value.split("\n")));
+                        List<String> list = new ArrayList<>();
+                      for (String str : value.split("\r\n")) {
+                            if (!str.equals("")) {
+                                list.add(str);
+                            }
+                        }
+                        resume.addSection(type, new ListSection(list));
                         break;
                 }
             } else {
                 resume.getSections().remove(type);
             }
         }
-        if ((uuid == null)) {
+        if (uuid == null || uuid.length() == 0) {
             storage.save(resume);
         } else {
             storage.update(resume);
@@ -101,7 +109,7 @@ public class ResumeServlet extends HttpServlet {
                 }
                 break;
             case "create":
-                resume = new Resume(UUID.randomUUID().toString(), "");
+                resume = new Resume();
                 resume.addSection(SectionType.OBJECTIVE, new TextSection(""));
                 resume.addSection(SectionType.PERSONAL, new TextSection(""));
                 resume.addSection(SectionType.ACHIEVEMENT, new ListSection(""));

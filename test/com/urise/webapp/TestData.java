@@ -11,7 +11,7 @@ public class TestData {
     public static final String UUID_3 = UUID.randomUUID().toString();
     public static final String UUID_4 = UUID.randomUUID().toString();
 
-    public static final Resume RESUME_1 = fillResume(UUID_1, "Elon Musk");
+    public static final Resume RESUME_1 = fillResumeForElon(UUID_1, "Elon Musk");
     public static final Resume RESUME_2 = fillResume(UUID_2, "Mark Zuckerberg");
     public static final Resume RESUME_3 = fillResume(UUID_3, "Bill Gates");
     public static final Resume RESUME_4 = fillResume(UUID_4, "Steve Jobs");
@@ -36,6 +36,10 @@ public class TestData {
         resume.addSection(SectionType.EDUCATION, new OrganizationSection(new Organization("Java Online Projects", "https://javaops.ru/",
                 new Organization.Position(2020, Month.NOVEMBER, "Ученик", "Изучаю Java на примере создания web приложения"))));
         return resume;
+    }
+
+    public static Resume fillResumeForElon(String uuid, String fullName) {
+              return new Resume(uuid, fullName);
     }
 }
 

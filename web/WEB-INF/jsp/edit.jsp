@@ -49,7 +49,7 @@
                 sectionType.name() == SectionType.QUALIFICATIONS}">
                     <dl>
                         <dd>${sectionType.title}</dd>
-                        <dt><textarea name="${sectionType.name()}" cols=50 rows="5"><%= String.
+                        <dt><textarea name="${sectionType.name()}" cols=50 rows="5"><%=String.
                                 join("\n", ((ListSection) section).getTextList())%></textarea></dt>
                     </dl>
                 </c:when>

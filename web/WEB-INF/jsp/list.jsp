@@ -10,7 +10,10 @@
 </head>
 <body>
 <jsp:include page="fragments/header.jsp"/>
-
+<form id="create">
+       <button><a href="resume?action=create">Создать новое резюме</a></button>
+   </form>
+<br/>
 <table id="tableList">
     <tr class="list">
         <th>Имя</th>
@@ -32,9 +35,6 @@
     </c:forEach>
 </table>
 <br/>
-<form id="create">
-    <button><a href="resume?action=create">Создать новое резюме</a></button>
-</form>
 <jsp:include page="fragments/footer.jsp"/>
 </body>
 </html>
