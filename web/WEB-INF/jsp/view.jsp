@@ -67,6 +67,9 @@
         </c:if>
     </c:when>
     <c:when test="${sectionType == SectionType.EXPERIENCE || sectionType == SectionType.EDUCATION}">
+    <c:set var ="orgSection" value="<%=((OrganizationSection) section)%>"/>
+    <jsp:useBean id="orgSection" type="com.urise.webapp.model.OrganizationSection"/>
+    <c:if test="${orgSection.listOrganization ne '[]'}">
     <tr class="view">
         <td colspan="2"><h2>${sectionType.title}</h2></td>
     </tr>
@@ -84,6 +87,7 @@
         <td>${position.description}</td>
         </c:forEach>
         </c:forEach>
+        </c:if>
         </c:when>
         <c:otherwise>""</c:otherwise>
         </c:choose>

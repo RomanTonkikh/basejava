@@ -8,9 +8,7 @@ import java.util.Map;
 public class ResumeTestData {
 
     public static void main(String[] args) {
-
         Resume resume1 = fillResume("uuid_1", "Roman Tonkikh");
-
         System.out.println(resume1 + "\n");
         for (Map.Entry<ContactType, String> entry : resume1.getContacts().entrySet()) {
             System.out.println(entry.getKey().getTitle() + ": " + entry.getValue());

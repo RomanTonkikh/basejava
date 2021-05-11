@@ -22,6 +22,7 @@ dl {
 dt {
     display: inline-block;
     width: 170px;
+
 }
 dd {
     display: inline-block;
@@ -68,3 +69,4 @@ li {
     width: 180px;
     margin: 0 auto;
 }
+
