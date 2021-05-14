@@ -35,7 +35,7 @@
             <c:choose>
                 <c:when test="${sectionType.name() == SectionType.OBJECTIVE || sectionType.name() == SectionType.PERSONAL}">
                     <dl>
-                        <dt>${sectionType.title}</dt>
+                        <dt><b>${sectionType.title}</b></dt>
                         <dd><input type="text" name="${sectionType.name()}"
                                    size=80
                                    value="<%=((TextSection) section).getContent()%>">
@@ -44,15 +44,13 @@
                 </c:when>
                 <c:when test="${sectionType.name() == SectionType.ACHIEVEMENT ||
                 sectionType.name() == SectionType.QUALIFICATIONS}">
-                    <dl>
-                        <dd>${sectionType.title}</dd>
-                        <dt><textarea name="${sectionType.name()}" cols=50 rows="5"><%=String.
-                                join("\n", ((ListSection) section).getTextList())%></textarea></dt>
-                    </dl>
+                       <h4>${sectionType.title}</h4>
+                       <textarea name="${sectionType.name()}" cols=108 rows="5"><%=String.
+                                join("\n", ((ListSection) section).getTextList())%></textarea><br/><br/>
+
                 </c:when>
                 <c:when test="${sectionType.name() == SectionType.EDUCATION ||
                 sectionType.name() == SectionType.EXPERIENCE}">
-
                     <dl>
                         <dt><b>${sectionType.title}</b></dt>
                         <hr>
@@ -79,15 +77,17 @@
                         <c:forEach var="position" items="<%=organization.getPositions()%>">
                             <jsp:useBean id="position" type="com.urise.webapp.model.Organization.Position"/>
                             <dl>
-                                <dt>Период (yyyy-mm-dd)</dt>
+                                <dt>Период</dt>
                                 <dd><input type="text" name="${sectionType.name()}${orgCount.index}startDate"
                                            size=10
-                                           value="<%=DateUtil.getStringDate(position.getStartDate())%>">
+                                           value="<%=DateUtil.getStringDate(position.getStartDate())%>"
+                                           placeholder="MM/yyyy">
                                 </dd>
                                 <dt>-</dt>
                                 <dd><input style="margin-left: -173px" type="text"
                                            name="${sectionType.name()}${orgCount.index}endDate" size=10
-                                           value="<%=DateUtil.getStringDate(position.getEndDate())%>">
+                                           value="<%=DateUtil.getStringDate(position.getEndDate())%>"
+                                           placeholder="MM/yyyy">
                                 </dd>
                             </dl>
                             <dl>

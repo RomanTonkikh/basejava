@@ -68,19 +68,19 @@ public class DataStreamSerializer implements Serializer {
             String uuid = dis.readUTF();
             String fullName = dis.readUTF();
             Resume resume = new Resume(uuid, fullName);
-            nextgenRead(dis, () -> resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
+            nextgenRead(dis, () -> resume.setContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
             nextgenRead(dis, () -> {
                 SectionType st = SectionType.valueOf(dis.readUTF());
                 switch (st) {
                     case OBJECTIVE:
                     case PERSONAL:
-                        resume.addSection(st, new TextSection(dis.readUTF()));
+                        resume.setSection(st, new TextSection(dis.readUTF()));
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
                         List<String> list = new ArrayList<>();
                         nextgenRead(dis, () -> list.add(dis.readUTF()));
-                        resume.addSection(st, new ListSection(list));
+                        resume.setSection(st, new ListSection(list));
                         break;
                     case EXPERIENCE:
                     case EDUCATION:
@@ -98,7 +98,7 @@ public class DataStreamSerializer implements Serializer {
                                         description.equals("") ? null : description);
                                 listPos.add(position);
                             });
-                            resume.addSection(st, new OrganizationSection(new Organization(link, listPos)));
+                            resume.setSection(st, new OrganizationSection(new Organization(link, listPos)));
                         });
                         break;
                     default:

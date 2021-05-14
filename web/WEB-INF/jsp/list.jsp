@@ -11,7 +11,7 @@
 <body>
 <jsp:include page="fragments/header.jsp"/>
 <form id="create">
-       <button><a href="resume?action=create">Создать новое резюме</a></button>
+       <button><a href="resume?action=create"><img src="img/add.png">Создать новое резюме</a></button>
    </form>
 <br/>
 <table id="tableList">

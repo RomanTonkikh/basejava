@@ -40,8 +40,8 @@ public abstract class AbstractStorageTest {
     @Test
     public void update() {
         Resume result = new Resume(UUID_3, "Bill Gates");
-        result.addContact(ContactType.PHONE, "44444");
-        result.addContact(ContactType.SKYPE, "skype4");
+        result.setContact(ContactType.PHONE, "44444");
+        result.setContact(ContactType.SKYPE, "skype4");
         storage.update(result);
         assertEquals(result, storage.get(UUID_3));
     }

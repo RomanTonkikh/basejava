@@ -170,7 +170,7 @@ public class SqlStorage implements Storage {
     private void addContact(ResultSet rs, Resume resume) throws SQLException {
         String value = rs.getString("value");
         if (value != null) {
-            resume.addContact(ContactType.valueOf(rs.getString("type")), value);
+            resume.setContact(ContactType.valueOf(rs.getString("type")), value);
         }
     }
 
@@ -178,25 +178,8 @@ public class SqlStorage implements Storage {
         String value = rs.getString("value");
         if (value != null) {
             SectionType type = SectionType.valueOf(rs.getString("type"));
-            resume.addSection(type, JsonParser.read(value, AbstractSection.class));
+            resume.setSection(type, JsonParser.read(value, AbstractSection.class));
         }
-
-//        String value = rs.getString("value");
-//        SectionType type = SectionType.valueOf(rs.getString("type"));
-//        if (value != null) {
-//            switch(type) {
-//                case OBJECTIVE:
-//                case PERSONAL:
-//                    TextSection ts = new TextSection(value);
-//                    resume.addSection(type, ts);
-//                    break;
-//                case ACHIEVEMENT:
-//                case QUALIFICATIONS:
-//                    ListSection ls = new ListSection(Arrays.asList(value.split("\n")));
-//                    resume.addSection(type, ls);
-//                    break;
-//            }
-//        }
     }
 
     private void insertContacts(Connection conn, Resume resume) throws SQLException {

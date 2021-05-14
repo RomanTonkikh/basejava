@@ -15,7 +15,7 @@ footer {
     text-align: center;
 }
 dl {
-    background: none repeat scroll 0 0 #FAFAFA;
+    /*background: none repeat scroll 0 0 #FAFAFA;*/
     margin: 8px 0;
     padding: 0;
 }
@@ -32,7 +32,7 @@ dd {
 
 tr.view td {
     font-size: 18px;
-    horiz-align: left;
+
 }
 
 tr.list td,th {
@@ -68,5 +68,9 @@ li {
 #create {
     width: 180px;
     margin: 0 auto;
+}
+
+h2 {
+    margin: 15px 10px 5px 0px;
 }
 

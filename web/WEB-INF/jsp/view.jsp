@@ -2,6 +2,7 @@
 <%@ page import="com.urise.webapp.model.ListSection" %>
 <%@ page import="com.urise.webapp.model.OrganizationSection" %>
 <%@ page import="com.urise.webapp.model.TextSection" %>
+<%@ page import="com.urise.webapp.util.HtmlUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
@@ -79,8 +80,10 @@
         <td colspan="2"><h3>${organization.homePage.link}</h3></td>
     </tr>
     <c:forEach var="position" items="${organization.positions}">
+    <jsp:useBean id="position" type="com.urise.webapp.model.Organization.Position"/>
     <tr class="view">
-        <td id="date" rowspan="2">${position.date}</td>
+<%--        <td id="date" rowspan="2">${position.date}</td>--%>
+        <td id="date" rowspan="2"><%=HtmlUtil.formatDates(position)%></td>
         <td><b>${position.title}</b></td>
     </tr>
     <tr class="view">
