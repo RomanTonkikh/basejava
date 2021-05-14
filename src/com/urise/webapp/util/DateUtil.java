@@ -12,10 +12,10 @@ public class DateUtil {
         return LocalDate.of(year, month, 1);
     }
 
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("MM/yyyy");
 
     public static LocalDate getLocalDate(String date) {
-        if (date.equals("Сейчас") || (date == null || date.trim().length() == 0))  {
+        if (date.equals("Сейчас") || HtmlUtil.isEmpty(date))  {
             return NOW;
         }
 
