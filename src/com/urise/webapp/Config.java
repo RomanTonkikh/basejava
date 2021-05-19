@@ -4,13 +4,12 @@ import com.urise.webapp.storage.SqlStorage;
 import com.urise.webapp.storage.Storage;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
 public class Config {
-    private static final String PROPS = "resumes/properties";
+    private static final String PROPS = "/resumes.properties";
 //    private static final File PROPS;
 
     //    static {
